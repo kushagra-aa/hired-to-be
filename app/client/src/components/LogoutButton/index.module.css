@@ -1,9 +1,10 @@
 .container {
   width: 100%;
 }
+
 .floating {
-  width: max-content;
-  position: fixed;
   bottom: 1rem;
+  position: fixed;
   right: 1rem;
+  width: max-content;
 }

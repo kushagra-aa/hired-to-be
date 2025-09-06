@@ -1,48 +1,40 @@
+/* Base wrapper */
+.input_base {
+  color: var(--color-text, #222);
+  display: flex;
+  flex-direction: column;
+  font-family: inherit;
+  gap: 0.25rem;
+  width: 100%;
+}
+
+/* Label */
+.input_label {
+  color: var(--color-text, #222);
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
 /* Global resets for form fields */
 .input_field,
 .textarea_field,
 .select_field {
   all: unset; /* reset most browser styles */
-  box-sizing: border-box;
-  font: inherit;
-  color: inherit;
   background: none;
-  border: none;
-  outline: none;
-  width: 100%;
-  min-width: 0;
-}
-
-/* Base wrapper */
-.input_base {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  width: 100%;
-  font-family: inherit;
-  color: var(--color-text, #222);
-}
-
-/* Label */
-.input_label {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--color-text, #222);
-  margin-bottom: 0.25rem;
-}
-
-/* Input / Textarea / Select */
-.input_field,
-.textarea_field,
-.select_field {
-  padding: 0.5rem 0.75rem;
+  background-color: var(--color-background, #fff);
   border: 1px solid var(--color-secondary, #ccc);
   border-radius: 4px;
-  background-color: var(--color-background, #fff);
+  box-sizing: border-box;
   color: var(--color-text, #222);
+  font: inherit;
+  min-width: 0;
+  outline: none;
+  padding: 0.5rem 0.75rem;
   transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease;
+  width: 100%;
 }
 
 .input_field:focus,
@@ -55,45 +47,45 @@
 
 /* Textarea */
 .textarea_field {
-  resize: vertical;
   min-height: 4rem;
+  resize: vertical;
 }
 
 /* Select */
 .select_field {
   appearance: none;
   background-image: url("data:image/svg+xml;utf8,<svg fill='%23222' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
-  background-repeat: no-repeat;
   background-position: right 0.5rem center;
+  background-repeat: no-repeat;
   background-size: 1rem;
   padding-right: 2rem;
 }
 
 .select_option {
-  color: var(--color-text, #222);
   background-color: var(--color-background, #fff);
+  color: var(--color-text, #222);
 }
 
 /* Icon */
 .input_icon {
+  color: var(--color-secondary, #888);
+  pointer-events: none;
   position: absolute;
   right: 0.75rem;
   top: 50%;
   transform: translateY(-50%);
-  pointer-events: none;
-  color: var(--color-secondary, #888);
 }
 
 /* Error + Hint */
 .input_error {
-  font-size: 0.75rem;
   color: var(--color-danger, #d32f2f);
+  font-size: 0.75rem;
   margin-top: 0.25rem;
 }
 
 .input_hint {
-  font-size: 0.75rem;
   color: var(--color-secondary, #666);
+  font-size: 0.75rem;
   margin-top: 0.25rem;
 }
 
@@ -114,9 +106,9 @@
 
 /* Password Input */
 .password_input_container {
-  position: relative;
-  display: flex;
   align-items: center;
+  display: flex;
+  position: relative;
   width: 100%;
 
   & > .input_field {
@@ -124,21 +116,22 @@
   }
 
   & > .password_input_icon {
+    align-items: center;
+    background: none;
+    border: none;
+    color: var(--color-secondary, #666);
+    cursor: pointer;
+    display: flex;
+    font-size: 0.875rem;
+    justify-content: center;
+    line-height: 1;
+    padding: 0.25rem;
     position: absolute;
     right: 0.5rem;
     top: 50%;
     transform: translateY(-50%);
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 0.875rem;
-    color: var(--color-secondary, #666);
-    padding: 0.25rem;
-    line-height: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     transition: color 0.2s ease;
+
     &:hover {
       color: var(--color-primary, #007bff);
     }
@@ -148,9 +141,9 @@
     }
 
     &:focus-visible {
+      border-radius: 4px;
       outline: 2px solid var(--color-primary, #007bff);
       outline-offset: 2px;
-      border-radius: 4px;
     }
   }
 }

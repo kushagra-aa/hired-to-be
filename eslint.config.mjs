@@ -8,8 +8,8 @@ import tseslint from "typescript-eslint";
 export default [
   {
     ignores: [
-      "dist",
-      "node_modules",
+      "**/dist",
+      "**/node_modules",
       "postcss.config.js",
       "tailwind.config.ts",
       "vite.config.ts",

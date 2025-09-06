@@ -6,7 +6,7 @@
 }
 
 .form_error {
-  font-size: 1rem;
   color: var(--color-danger, #d32f2f);
+  font-size: 1rem;
   margin-top: 0.25rem;
 }
