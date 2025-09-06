@@ -1,5 +1,4 @@
-import Button from "@client/components/ui/Button/index.js";
-
+import UIButton from "../ui/Button.js";
 import styles from "./index.module.css";
 
 type PageErrorProps = {
@@ -15,11 +14,7 @@ export function PageError({
     <div className={styles.container}>
       <h1 className={styles.title}>⚠️ Oops!</h1>
       <p className={styles.message}>{message}</p>
-      {onRetry && (
-        <Button variant="primary" onClick={onRetry}>
-          Retry
-        </Button>
-      )}
+      {onRetry && <UIButton onClick={onRetry}>Retry</UIButton>}
     </div>
   );
 }

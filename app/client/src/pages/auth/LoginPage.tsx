@@ -5,21 +5,20 @@ import { useForm } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router";
 
 import { USER_LANDING_PAGES } from "@client/app/router.js";
-import Button from "@client/components/ui/Button/index.js";
-import { Form } from "@client/components/ui/Form/index.js";
-import { InputField } from "@client/components/ui/Form/Input/index.js";
+import UIButton from "@client/components/ui/Button.js";
+import UIFormWrapper from "@client/components/ui/FormWrapper.js";
+import {
+  FormControlType,
+  UIInputField,
+} from "@client/components/ui/InputField.js";
 import Loader from "@client/components/ui/Loader.js";
 import { makeToast } from "@client/components/ui/Toast.js";
 import { useLogin } from "@client/hooks/useAuthActions.js";
+import { Form } from "@client/shadcn/components/ui/form.js";
 import { useAuth } from "@client/stores/auth.store.js";
 
 export default function LoginPage() {
-  const {
-    register: formRegister,
-    handleSubmit,
-    formState: { errors },
-    setError,
-  } = useForm<LoginFormType>({
+  const form = useForm<LoginFormType>({
     resolver: zodResolver(LoginFormSchema),
   });
 
@@ -43,41 +42,51 @@ export default function LoginPage() {
           await navigate(from, { replace: true });
         },
         onError: (err: ApiError) => {
-          setError("root", { message: err.data?.message || err.message });
+          form.setError("root", { message: err.data?.message || err.message });
         },
       },
     );
   };
 
   return (
-    <div style={{ padding: "2rem" }}>
-      <h1 style={{ marginBottom: "1rem" }}>🔑 Login</h1>
-      <Form
-        error={errors.root?.message}
-        onSubmit={handleSubmit(handleFormSubmit)}
-      >
-        <InputField
-          label="Email"
-          type="email"
-          placeholder="Enter Email"
-          icon={"X"}
-          error={errors?.email?.message}
-          {...formRegister("email")} // Handles 'name', 'onChange', 'value'
-        />
-        <InputField
-          as="password"
-          label="Password"
-          placeholder="Enter Password"
-          error={errors?.password?.message}
-          {...formRegister("password")} // Handles 'name', 'onChange', 'value'
-        />
-        <Button type="submit" variant="primary" disabled={login.isPending}>
-          {login.isPending ? (
-            <Loader variant="clip" size={"xs"} color="secondary" />
-          ) : (
-            "Login"
-          )}
-        </Button>
+    <main className="w-[100vw] min-h-[100vh] p-10 flex flex-col items-center justify-center">
+      <h1 className="text-4xl">🔑 Login</h1>
+      <Form {...form}>
+        <UIFormWrapper
+          error={form.formState.errors.root?.message}
+          className="space-y-2 w-11/12 sm:w-3/4 md:w-2/3 lg:w-1/2"
+          onSubmit={form.handleSubmit(handleFormSubmit)}
+        >
+          <UIInputField
+            {...form.register("email")}
+            control={form.control as unknown as FormControlType}
+            label="Email"
+            type="email"
+            placeholder="Enter Email"
+            icon={"X"}
+            error={form.formState.errors?.email?.message}
+          />
+          <UIInputField
+            {...form.register("password")} // Handles 'name', 'onChange', 'value'
+            control={form.control as unknown as FormControlType}
+            error={form.formState.errors?.password?.message}
+            as="password"
+            label="Password"
+            placeholder="Enter Password"
+          />
+          <UIButton
+            className="min-w-1/4"
+            type="submit"
+            variant="primary"
+            disabled={login.isPending}
+          >
+            {login.isPending ? (
+              <Loader variant="clip" size={"xs"} color="secondary" />
+            ) : (
+              "Login"
+            )}
+          </UIButton>
+        </UIFormWrapper>
       </Form>
       <Link
         style={{
@@ -89,6 +98,6 @@ export default function LoginPage() {
       >
         No Account? Register!
       </Link>
-    </div>
+    </main>
   );
 }

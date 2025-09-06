@@ -3,18 +3,17 @@ import {
   type MouseEvent as ReactMouseEvent,
 } from "react";
 
-import styles from "./index.module.css";
+import { Button } from "@client/shadcn/components/ui/button.js";
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: "primary" | "secondary" | "danger" | "success" | "warning";
-  isFill?: boolean;
 };
 
-function Button({
+function UIButton({
   children,
   onClick,
   variant = "primary",
-  isFill = false,
+  className,
   ...props
 }: ButtonProps) {
   const handleClick = (e: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -22,14 +21,14 @@ function Button({
   };
 
   return (
-    <button
-      className={`${styles.button} ${styles[variant]} ${isFill && styles.fill}`}
+    <Button
+      className={`bg-${variant} ${className}`}
       onClick={handleClick}
       {...props}
     >
       {children}
-    </button>
+    </Button>
   );
 }
 
-export default Button;
+export default UIButton;

@@ -27,7 +27,7 @@ export function injectCssVariables(theme?: ThemeType) {
   const themeColors = getThemeColors();
 
   Object.entries(themeColors).forEach(([key, value]) => {
-    root.style.setProperty(`--color-${key}`, value);
+    root.style.setProperty(`--pro-color-${key}`, value);
   });
 
   // Optional: add a data attribute for styling hooks

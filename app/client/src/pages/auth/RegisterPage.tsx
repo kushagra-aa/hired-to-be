@@ -9,19 +9,20 @@ import { Link, useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
 
 import { USER_LANDING_PAGES } from "@client/app/router.js";
-import Button from "@client/components/ui/Button/index.js";
-import { Form } from "@client/components/ui/Form/index.js";
-import { InputField } from "@client/components/ui/Form/Input/index.js";
+import UIButton from "@client/components/ui/Button.js";
+import UIFormWrapper from "@client/components/ui/FormWrapper.js";
+import {
+  FormControlType,
+  UIInputField,
+} from "@client/components/ui/InputField.js";
 import Loader from "@client/components/ui/Loader.js";
 import { useRegister } from "@client/hooks/useAuthActions.js";
+import { Form } from "@client/shadcn/components/ui/form.js";
 
 export default function RegisterPage() {
-  const {
-    register: formRegister,
-    handleSubmit,
-    formState: { errors },
-    setError,
-  } = useForm<RegisterFormType>({ resolver: zodResolver(RegisterFormSchema) });
+  const form = useForm<RegisterFormType>({
+    resolver: zodResolver(RegisterFormSchema),
+  });
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -47,11 +48,11 @@ export default function RegisterPage() {
         onError: (err: ApiError) => {
           const errors = err.data?.errors || [];
           if (!errors) {
-            setError("root", { message: err.message });
+            form.setError("root", { message: err.message });
           }
           const errorFields = Object.entries(errors);
           errorFields.forEach(([field, error]) => {
-            setError(field as "root", {
+            form.setError(field as "root", {
               message: error[0] || "Something Is Wrong",
             });
           });
@@ -61,46 +62,56 @@ export default function RegisterPage() {
   };
 
   return (
-    <div style={{ padding: "2rem" }}>
-      <h1 style={{ marginBottom: "1rem" }}>📝 Register</h1>
-      <Form
-        error={errors.root?.message}
-        onSubmit={handleSubmit(handleFormSubmit)}
-      >
-        <InputField
-          label="Full Name"
-          placeholder="Enter Full Name"
-          error={errors?.full_name?.message}
-          {...formRegister("full_name")}
-        />
-        <InputField
-          label="Email"
-          type="email"
-          placeholder="Enter Email"
-          error={errors?.email?.message}
-          {...formRegister("email")}
-        />
-        <InputField
-          as="password"
-          label="Password"
-          placeholder="Enter Password"
-          error={errors?.password?.message}
-          {...formRegister("password")}
-        />
-        <InputField
-          as="password"
-          label="Confirm Password"
-          placeholder="Enter Password"
-          error={errors?.confirm_password?.message}
-          {...formRegister("confirm_password")}
-        />
-        <Button type="submit" variant="primary" disabled={register.isPending}>
-          {register.isPending ? (
-            <Loader variant="clip" size={"xs"} color="secondary" />
-          ) : (
-            "Register"
-          )}
-        </Button>
+    <main className="w-[100vw] min-h-[100vh] p-10 flex flex-col items-center justify-center gap-6">
+      <h1 className="text-4xl">📝 Register</h1>
+      <Form {...form}>
+        <UIFormWrapper
+          className="space-y-2 w-11/12 sm:w-3/4 md:w-2/3 lg:w-1/2"
+          onSubmit={form.handleSubmit(handleFormSubmit)}
+        >
+          <UIInputField
+            control={form.control as unknown as FormControlType}
+            label="Full Name"
+            placeholder="Enter Full Name"
+            error={form.formState.errors?.full_name?.message}
+            {...form.register("full_name")}
+          />
+          <UIInputField
+            control={form.control as unknown as FormControlType}
+            label="Email"
+            type="email"
+            placeholder="Enter Email"
+            error={form.formState.errors?.email?.message}
+            {...form.register("email")}
+          />
+          <UIInputField
+            control={form.control as unknown as FormControlType}
+            as="password"
+            label="Password"
+            placeholder="Enter Password"
+            error={form.formState.errors?.password?.message}
+            {...form.register("password")}
+          />
+          <UIInputField
+            control={form.control as unknown as FormControlType}
+            as="password"
+            label="Confirm Password"
+            placeholder="Enter Password"
+            error={form.formState.errors?.confirm_password?.message}
+            {...form.register("confirm_password")}
+          />
+          <UIButton
+            type="submit"
+            variant="primary"
+            disabled={register.isPending}
+          >
+            {register.isPending ? (
+              <Loader variant="clip" size={"xs"} color="secondary" />
+            ) : (
+              "Register"
+            )}
+          </UIButton>
+        </UIFormWrapper>
       </Form>
       <Link
         style={{
@@ -112,6 +123,6 @@ export default function RegisterPage() {
       >
         Have an Account? Login!
       </Link>
-    </div>
+    </main>
   );
 }

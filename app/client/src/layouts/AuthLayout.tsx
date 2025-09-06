@@ -2,6 +2,7 @@
 import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router";
 
+import { USER_LANDING_PAGES } from "@client/app/router.js";
 import { useAuth } from "@client/stores/auth.store.js";
 
 export function AuthLayout() {
@@ -10,14 +11,14 @@ export function AuthLayout() {
 
   useEffect(() => {
     if (isAuthenticated && user) {
-      naviagate("/");
+      naviagate(USER_LANDING_PAGES[user.role]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, isAuthenticated]);
 
   return (
-    <div style={{ padding: "2rem", maxWidth: "400px", margin: "0 auto" }}>
+    <>
       <Outlet />
-    </div>
+    </>
   );
 }
