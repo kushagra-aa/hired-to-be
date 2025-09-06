@@ -1,0 +1,40 @@
+.nav {
+  width: 100%;
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+  border-bottom: 1px solid var(--color-text);
+  align-items: center;
+  justify-items: flex-start;
+  grid-auto-flow: column;
+  grid-template-columns: repeat(auto-fill, 10%);
+}
+
+.nav_item {
+  color: var(--color-text);
+  font-size: 1.5rem;
+
+  &.nav_home {
+    font-weight: bold;
+  }
+
+  &.active {
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+}
+.nav_text {
+  width: 100%;
+  grid-column: -5/-2;
+  display: flex;
+  justify-content: flex-end;
+  font-size: 1.2rem;
+}
+.nav_logout {
+  width: 100%;
+  grid-column: -2/-1;
+  display: flex;
+  justify-content: flex-end;
+  font-size: 1.2rem;
+}

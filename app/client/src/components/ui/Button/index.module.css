@@ -1,0 +1,36 @@
+.button {
+  padding: 0.5rem 2rem;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+}
+
+.fill {
+  width: 100%;
+}
+
+.primary {
+  background: var(--color-primary);
+  color: white;
+}
+
+.secondary {
+  background: var(--color-secondary);
+  color: #111827;
+}
+
+.danger {
+  background: var(--color-danger);
+  color: white;
+}
+
+.success {
+  background: var(--color-success);
+  color: white;
+}
+
+.warning {
+  background: var(--color-warning);
+  color: white;
+}

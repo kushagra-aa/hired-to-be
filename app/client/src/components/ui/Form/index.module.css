@@ -1,0 +1,12 @@
+/* Form Styles */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form_error {
+  font-size: 1rem;
+  color: var(--color-danger, #d32f2f);
+  margin-top: 0.25rem;
+}

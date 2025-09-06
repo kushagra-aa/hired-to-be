@@ -1,0 +1,35 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "always",
+    "source.fixAll.stylelint": "explicit",
+    "source.fixAll.ts": "always",
+    "source.organizeImports": "always",
+    "source.removeUnusedImports": "always",
+    "source.sort.json": "always",
+    "source.sortImports": "always"
+  },
+  "editor.formatOnSave": true,
+  "eslint.validate": [
+    "javascript",
+    "typescript",
+    "typescriptreact",
+    "javacriptreact",
+    "json"
+  ],
+  "files.exclude": {
+    "**/.classpath": true,
+    "**/.DS_Store": true,
+    "**/.factorypath": true,
+    "**/.git": true,
+    "**/.hg": true,
+    "**/.project": true,
+    "**/.settings": true,
+    "**/.svn": true,
+    "**/.turbo": true,
+    "**/.wrangler": true,
+    "**/dist": true,
+    "**/node_modules": true,
+    "**/Thumbs.db": true
+  },
+  "stylelint.validate": ["css", "scss", "postcss"]
+}

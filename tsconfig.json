@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./app",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "jsx": "react-jsx",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "outDir": "./dist",
+    "paths": {
+      "@/*": ["app/*"],
+      "@client/*": ["client/src/*"],
+      "@server/*": ["server/src/*"],
+      "@shared/*": ["shared/*"]
+    },
+    "resolveJsonModule": true,
+    "rootDir": "./app",
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ES2020"
+  },
+  "include": ["app"]
+}

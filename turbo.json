@@ -1,0 +1,19 @@
+{
+    "tasks": {
+        "build": {
+            "dependsOn": [
+                "^build"
+            ],
+            "outputs": [
+                "dist/**",
+                "app/client/dist/**"
+            ]
+        },
+        "dev": {
+            "cache": false,
+            "dependsOn": [
+                "^build"
+            ]
+        }
+    }
+}
