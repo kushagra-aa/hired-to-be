@@ -24,7 +24,7 @@ async function getUserByEmail(email: UserEntity["email"]) {
 
 async function addUser(paylaod: UserRegisterPayloadType) {
   const client = getClient();
-  const user = client.insert("users", { ...paylaod, role: UserRoleEnum.admin });
+  const user = client.insert("users", { ...paylaod, role: UserRoleEnum.user });
 
   return user;
 }
