@@ -1,25 +1,13 @@
-const baseColors = {
-  primary: "#25eb8fff",
-  secondary: "#73648bff",
-  success: "#16a34a",
-  danger: "#dc2626",
-  warning: "#f59e0b",
-};
-
 export const COLORS = {
-  light: {
-    ...baseColors,
-    background: "#f9fafb",
-    text: "#111827",
-  },
-  dark: {
-    ...baseColors,
-    background: "#111827",
-    text: "#f9fafb",
-  },
+  primary: "oklch(0.5572 0.2617 304.98)",
+  secondary: "oklch(0.6734 0.1925 322.67)",
+  accent: "oklch(0.47 0.0937 298.63)",
+  success: "oklch(62% 0.17 152deg)",
+  danger: "oklch(63% 0.23 29deg)",
+  warning: "oklch(80% 0.16 70deg)",
+  backgorund: "oklch(20% 0.01 260deg)",
+  foreground: "oklch(97% 0 0deg)",
 } as const;
 
-export type ThemeType = keyof typeof COLORS;
-export type ThemeColorNameType = keyof (typeof COLORS)["light"];
-export type ColorNameType = keyof typeof baseColors;
-export type ColorsType = (typeof COLORS)[ThemeType];
+export type ThemePalette = typeof COLORS;
+export type ColorsEnum = keyof typeof COLORS;

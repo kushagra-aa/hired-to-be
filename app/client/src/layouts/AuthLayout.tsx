@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router";
 
 import { USER_LANDING_PAGES } from "@client/app/router.js";
+import { NavBar } from "@client/components/NavBar/index.js";
 import { useAuth } from "@client/stores/auth.store.js";
 
 export function AuthLayout() {
@@ -18,6 +19,7 @@ export function AuthLayout() {
 
   return (
     <>
+      <NavBar />
       <Outlet />
     </>
   );

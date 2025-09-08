@@ -1,46 +1,29 @@
-import { COLORS, ColorsType, ThemeType } from "./colors.js";
+import { COLORS, ThemePalette } from "./colors.js";
 
-export const getTheme = (theme?: ThemeType): ThemeType => {
-  let resolvedTheme: ThemeType;
-  if (theme) {
-    resolvedTheme = theme;
-  } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-    resolvedTheme = "dark";
-  } else {
-    resolvedTheme = "light"; // fallback
-  }
-  return resolvedTheme;
-};
-export const getThemeColors = (): ColorsType => COLORS[getTheme()];
-
-/**
- * Injects CSS variables into :root based on theme.
- * - Uses prefers-color-scheme if no theme is passed
- * - Falls back to "light"
- */
-export function injectCssVariables(theme?: ThemeType) {
-  const root = document.documentElement;
-
-  // Detect system preference if no theme is provided
-  const resolvedTheme: ThemeType = getTheme(theme);
-
-  const themeColors = getThemeColors();
-
-  Object.entries(themeColors).forEach(([key, value]) => {
-    root.style.setProperty(`--pro-color-${key}`, value);
-  });
-
-  // Optional: add a data attribute for styling hooks
-  root.setAttribute("data-theme", resolvedTheme);
+function setVar(name: string, value: string) {
+  document.documentElement.style.setProperty(name, value);
 }
 
-export function watchSystemTheme() {
+export function applyPalette(p: ThemePalette) {
+  setVar("--pro-color-primary", p.primary);
+  setVar("--pro-color-secondary", p.secondary);
+  setVar("--pro-color-accent", p.accent);
+  setVar("--pro-color-success", p.success);
+  setVar("--pro-color-danger", p.danger);
+  setVar("--pro-color-warning", p.warning);
+  setVar("--pro-color-background", p.backgorund);
+  setVar("--pro-color-foregorund", p.foreground);
+}
+
+export function applyTheme() {
+  applyPalette(COLORS);
+}
+
+export function watchSystemChanges() {
   const media = window.matchMedia("(prefers-color-scheme: dark)");
-
-  const applyTheme = () => {
-    injectCssVariables(media.matches ? "dark" : "light");
+  const handler = () => {
+    applyTheme();
   };
-
-  media.addEventListener("change", applyTheme);
-  applyTheme(); // initial run
+  media.addEventListener("change", handler);
+  return () => media.removeEventListener("change", handler);
 }

@@ -4,11 +4,14 @@ import type { ReactNode } from "react";
 import { appQueryClient } from "@client/lib/query-client.js";
 
 import AuthProvider from "./AuthProvider.js";
+import { ThemeProvider } from "./ThemeProvider.js";
 
 export default function AppProvider({ children }: { children: ReactNode }) {
   return (
     <QueryClientProvider client={appQueryClient}>
-      <AuthProvider>{children}</AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>{children}</AuthProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }

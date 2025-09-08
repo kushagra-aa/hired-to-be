@@ -1,6 +1,6 @@
 import { ClipLoader, FadeLoader, PulseLoader } from "react-spinners";
 
-import { type ColorNameType } from "@client/styles/colors.js";
+import { ColorsEnum } from "@client/styles/colors.js";
 
 type SizeOption = "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
 
@@ -26,7 +26,7 @@ const barSizeMap: Record<
 };
 
 type BaseLoaderProps = {
-  color?: ColorNameType;
+  color?: ColorsEnum;
   size?: SizeOption | number; // semantic or numeric
 };
 

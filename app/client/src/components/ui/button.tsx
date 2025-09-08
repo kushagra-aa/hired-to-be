@@ -22,7 +22,8 @@ function UIButton({
 
   return (
     <Button
-      className={`bg-${variant} ${className}`}
+      className={`${className}`}
+      variant={"secondary"}
       onClick={handleClick}
       {...props}
     >

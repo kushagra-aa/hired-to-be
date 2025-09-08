@@ -3,6 +3,7 @@ import { NavLink, type NavLinkProps } from "react-router";
 import { LogoutButton } from "@client/components/LogoutButton/index.js";
 import { useAuth } from "@client/stores/auth.store.js";
 
+import { ThemeModeToggle } from "../ThemeToggle.js";
 import styles from "./index.module.css";
 
 const NavItem = (props: NavLinkProps) => (
@@ -39,6 +40,7 @@ export function NavBar() {
           </div>
         </>
       )}
+      <ThemeModeToggle />
     </nav>
   );
 }

@@ -1,12 +1,9 @@
 import AppProvider from "./app/AppProvider.js";
 import AppRouter from "./app/router.js";
 import Toast from "./components/ui/Toast.js";
-import { injectCssVariables, watchSystemTheme } from "./styles/colors.css.js";
+import { applyTheme } from "./styles/colors.css.js";
 
-// Load CSS Variables
-injectCssVariables();
-// Watch CSS Theme
-watchSystemTheme();
+applyTheme();
 
 function App() {
   return (
