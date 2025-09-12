@@ -1,5 +1,6 @@
 import { Context } from "hono";
 
+import { getDb } from "@server/database/index.js";
 import {
   sendAPIError,
   sendAPIResponse,
@@ -14,16 +15,17 @@ import sessionService, {
 import { authValidator } from "@server/utils/validators/auth.validator.js";
 
 async function registerController(c: Context) {
+  const db = getDb(c.env);
   const payload = await c.req.json();
   const validationResult = authValidator.validateRegister(payload);
   if (!validationResult.isValid && validationResult.errors)
     return sendValidationError(c, validationResult.errors);
-  const userResp = await authService.register(payload);
+  const userResp = await authService.register(db, payload);
   if (userResp.error || !userResp.data) return sendAPIError(c, userResp);
 
   const token = await sessionService.createSession(
     c,
-    userResp.data.id,
+    userResp.data.googleID,
     userResp.data.role,
   );
 
@@ -37,16 +39,17 @@ async function registerController(c: Context) {
 }
 
 async function loginController(c: Context) {
+  const db = getDb(c.env);
   const payload = await c.req.json();
   const validationResult = authValidator.validateLogin(payload);
   if (!validationResult.isValid && validationResult.errors)
     return sendValidationError(c, validationResult.errors);
-  const userResp = await authService.login(payload);
+  const userResp = await authService.login(db, payload);
   if (userResp.error || !userResp.data) return sendAPIError(c, userResp);
 
   const token = await sessionService.createSession(
     c,
-    userResp.data.id,
+    userResp.data.googleID,
     userResp.data.role,
   );
 

@@ -5,54 +5,57 @@ import {
   UserResponseType,
 } from "@shared/types/entities/user.entity.js";
 
-import { hashPassword, verifyPassword } from "@server/lib/bcrypt.js";
+import { DbType } from "@server/database/index.js";
 import userRepository from "@server/repositories/user.repository.js";
 import { toUserDTO } from "@server/utils/toUserDTO.js";
 
-async function registerService(
+export async function registerService(
+  db: DbType,
   payload: UserRegisterPayloadType,
 ): RegistryReturnType<UserResponseType> {
-  const existingUser = await userRepository.getUserByEmail(payload.email);
-  if (existingUser)
+  const existing = await userRepository.findUserByGoogleId(
+    db,
+    payload.googleID,
+  );
+  if (existing) {
     return {
       error: "User Already exists with this email",
       message: "Email Already in Use",
       status: 401,
       errors: { email: ["Already Used"] },
     };
-  const hashedPassword = await hashPassword(payload.password);
-  const user = await userRepository.addUser({
-    ...payload,
-    password: hashedPassword,
-  });
+  }
+  const user = await userRepository.createUser(db, payload);
   return {
-    data: toUserDTO(user),
+    data: toUserDTO(user[0]),
     message: "User Registed Successfully",
     status: 201,
   };
 }
 
+export async function loginUser(db: DbType, googleID: string) {
+  return userRepository.findUserByGoogleId(db, googleID);
+}
+
 async function loginService(
+  db: DbType,
   payload: UserLoginPayloadType,
 ): RegistryReturnType<UserResponseType> {
-  const existingUser = await userRepository.getUserByEmail(payload.email);
-  if (!existingUser)
+  const existingUser = await userRepository.findUserByEmail(db, payload.email);
+  if (!existingUser) {
     return {
       error: "Invalid Credentials",
       message: "Invalid Credentials",
       status: 401,
     };
-  const compareResult = await verifyPassword(
-    payload.password,
-    existingUser.password,
-  );
-  if (!compareResult)
+  }
+  if (!(existingUser.googleID !== payload.googleID)) {
     return {
       error: "Invalid Credentials",
       message: "Invalid Credentials",
       status: 401,
     };
-
+  }
   return {
     data: toUserDTO(existingUser),
     message: "User LoggedIn Successfully",

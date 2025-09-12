@@ -2,7 +2,7 @@ import z from "zod";
 
 export const LoginFormSchema = z.object({
   email: z.email().transform((v) => v),
-  password: z
+  googleID: z
     .string()
     .min(6)
     .transform((v) => v),
@@ -12,10 +12,10 @@ export type LoginFormType = z.infer<typeof LoginFormSchema>;
 
 export const RegisterFormSchema = z
   .object({
-    full_name: z.string().min(3).optional(),
+    fullName: z.string().min(3).max(255).optional(),
     // .transform((v) => v),
     email: z.email().transform((v) => v),
-    password: z
+    googleID: z
       .string()
       .min(8, "Password must be at least 8 characters")
       .regex(/[A-Z]/, "Must contain at least one uppercase letter")
@@ -23,18 +23,18 @@ export const RegisterFormSchema = z
       .regex(/[0-9]/, "Must contain at least one number")
       .regex(/[^A-Za-z0-9]/, "Must contain at least one special character")
       .transform((v) => v),
-    confirm_password: z
+    confirm_googleID: z
       .string()
       .min(6)
       .transform((v) => v),
   })
-  .superRefine(({ password, confirm_password }, ctx) => {
+  .superRefine(({ googleID, confirm_googleID }, ctx) => {
     // Check for Password and ConfirmPassword being same
-    if (confirm_password !== password) {
+    if (confirm_googleID !== googleID) {
       ctx.addIssue({
         code: "custom",
-        message: "The Passwords did not match",
-        path: ["confirm_password"],
+        message: "The Google IDs did not match",
+        path: ["confirm_googleID"],
       });
     }
   });

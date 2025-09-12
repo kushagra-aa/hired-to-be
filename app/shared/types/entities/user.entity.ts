@@ -1,32 +1,26 @@
-import { PartialBy } from "@shared/types/util.types";
+import { BaseEntity } from ".";
 
+// User Roles Source of truth
 export enum UserRoleEnum {
   admin = "ADMIN",
   user = "USER",
 }
 
-export type UserEntity = {
-  id: number;
-  full_name: string;
-  password: string;
+export type UserBaseEntity = {
+  fullName?: string | null;
   email: string;
+  googleID: string;
   role: UserRoleEnum;
 };
 
-export type UserResponseType = PartialBy<UserEntity, "password">;
+export type UserEntity = UserBaseEntity & BaseEntity;
 
-export type UserRegisterPayloadType = Omit<UserEntity, "role" | "id"> & {
-  confirm_password: string;
-};
+export type UserRegisterPayloadType = Omit<UserBaseEntity, "role">;
 
-export type UserLoginPayloadType = Omit<
-  UserEntity,
-  "role" | "full_name" | "id"
->;
+export type UserLoginPayloadType = Omit<UserBaseEntity, "role" | "fullName">;
 
-export type UserSessionType = Omit<
-  UserEntity,
-  "full_name" | "password" | "email"
->;
+export type UserResponseType = UserEntity;
+
+export type UserSessionType = Omit<UserBaseEntity, "fullName">;
 
 export type UserSessionResponseType = { user: UserSessionType; token: string };

@@ -34,7 +34,7 @@ export function NavBar() {
         </>
       ) : (
         <>
-          <span className={styles.nav_text}>Welcome, {user?.id}</span>
+          <span className={styles.nav_text}>Welcome, {user?.googleID}</span>
           <div className={styles.nav_logout}>
             <LogoutButton />
           </div>

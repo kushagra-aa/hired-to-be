@@ -1,5 +1,7 @@
-import { Hono } from "hono";
+import { Context, Hono } from "hono";
 
+import { getDb } from "./database/index.js";
+import { userModel } from "./database/models/user.model.js";
 import { corsMiddleware } from "./middlewares/cors.middleware.js";
 import { errorHandlerMiddleware } from "./middlewares/errorHandler.middleware.js";
 import { loggerMiddleware } from "./middlewares/logger.middleware.js";
@@ -13,6 +15,12 @@ const app = new Hono({
 // Global middlewares
 app.use("*", loggerMiddleware);
 app.use("*", corsMiddleware);
+
+app.get("/ping", async (c: Context) => {
+  const db = getDb(c.env);
+  const result = await db.select().from(userModel);
+  return c.json(result);
+});
 
 // Routes
 routes(app);

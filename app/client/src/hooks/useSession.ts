@@ -11,7 +11,8 @@ export function useSession() {
     staleTime: 1000 * 60 * 5, // 5 minutes (data considered fresh)
     refetchInterval: (data) => {
       // Only poll if user is logged in
-      if (data) return 1000 * 60 * 10; // every 10 minutes
+      console.log("data :>> ", data.state.data);
+      if (data?.state?.data) return 1000 * 60 * 1; // every 10 minutes
       return false; // don’t poll if not logged in
     },
     refetchOnWindowFocus: true, // re-check when tab is focused

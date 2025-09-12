@@ -1,55 +1,31 @@
-import {
-  UserEntity,
-  UserRegisterPayloadType,
-  UserRoleEnum,
-} from "@shared/types/entities/user.entity.js";
+import { UserRegisterPayloadType } from "@shared/types/entities/user.entity.js";
+import { eq } from "drizzle-orm";
 
-import { getClient } from "@server/database/index.js";
+import { DbType } from "@server/database/index.js";
+import models from "@server/database/models/index.js";
 
-async function getUseryID(id: UserEntity["id"]) {
-  const client = getClient();
-  const users = client.select("users");
-  const foundUser = users.find((u) => u.id === id);
-
-  return foundUser || null;
+export async function createUser(db: DbType, payload: UserRegisterPayloadType) {
+  return await db.insert(models.user).values(payload).returning();
 }
 
-async function getUserByEmail(email: UserEntity["email"]) {
-  const client = getClient();
-  const users = client.select("users");
-  const foundUser = users.find((u) => u.email === email);
-
-  return foundUser || null;
+export async function findUserByGoogleId(db: DbType, googleID: string) {
+  return await db
+    .select()
+    .from(models.user)
+    .where(eq(models.user.googleID, googleID))
+    .get();
 }
 
-async function addUser(paylaod: UserRegisterPayloadType) {
-  const client = getClient();
-  const user = client.insert("users", { ...paylaod, role: UserRoleEnum.user });
-
-  return user;
-}
-
-async function editUser(
-  id: UserEntity["id"],
-  paylaod: Partial<Omit<UserEntity, "id">>,
-) {
-  const client = getClient();
-  const user = client.update("users", id, { ...paylaod });
-
-  return user;
-}
-
-async function deleteUser(id: UserEntity["id"]) {
-  const client = getClient();
-  const user = client.delete("users", id);
-
-  return user;
+export async function findUserByEmail(db: DbType, email: string) {
+  return await db
+    .select()
+    .from(models.user)
+    .where(eq(models.user.email, email))
+    .get();
 }
 
 export default {
-  getUseryID,
-  getUserByEmail,
-  addUser,
-  editUser,
-  deleteUser,
+  createUser,
+  findUserByGoogleId,
+  findUserByEmail,
 };

@@ -20,7 +20,7 @@ import { SESSION_COOKIE_NAME } from "@server/utils/constants.js";
  */
 const createSessionService = async (
   c: Context,
-  userID: UserSessionType["id"],
+  userID: UserSessionType["googleID"],
   role: UserRoleEnum,
   options?: {
     rememberMe?: boolean;

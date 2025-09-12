@@ -12,8 +12,8 @@ import { useAppMutation } from "./useAppQuery.js";
 export function useLogin() {
   const setUser = useAuth((s) => s.login);
   return useAppMutation<UserResponseType, UserLoginPayloadType>({
-    mutationFn: ({ email, password }: UserLoginPayloadType) =>
-      loginAPI({ email, password }),
+    mutationFn: ({ email, googleID }: UserLoginPayloadType) =>
+      loginAPI({ email, googleID }),
     onSuccess: (user) => {
       const { data: safeUser } = user;
       setUser(safeUser, "Token");
@@ -24,13 +24,8 @@ export function useLogin() {
 export function useRegister() {
   const setUser = useAuth((s) => s.login);
   return useAppMutation({
-    mutationFn: ({
-      full_name,
-      email,
-      password,
-      confirm_password,
-    }: UserRegisterPayloadType) =>
-      registerAPI({ full_name, email, password, confirm_password }),
+    mutationFn: ({ fullName, email, googleID }: UserRegisterPayloadType) =>
+      registerAPI({ fullName, email, googleID }),
     onSuccess: (user) => {
       const { data: safeUser } = user;
       setUser(safeUser, "Token");

@@ -32,7 +32,7 @@ export default function LoginPage() {
 
   const handleFormSubmit = (data: LoginFormType) => {
     login.mutate(
-      { email: data.email, password: data.password },
+      { email: data.email, googleID: data.googleID },
       {
         onSuccess: async () => {
           const from =
@@ -67,17 +67,16 @@ export default function LoginPage() {
             error={form.formState.errors?.email?.message}
           />
           <UIInputField
-            {...form.register("password")} // Handles 'name', 'onChange', 'value'
+            {...form.register("googleID")} // Handles 'name', 'onChange', 'value'
             control={form.control as unknown as FormControlType}
-            error={form.formState.errors?.password?.message}
+            error={form.formState.errors?.googleID?.message}
             as="password"
-            label="Password"
-            placeholder="Enter Password"
+            label="Google ID"
+            placeholder="Enter Google ID"
           />
           <UIButton
             className="min-w-1/4"
             type="submit"
-            variant="primary"
             disabled={login.isPending}
           >
             {login.isPending ? (

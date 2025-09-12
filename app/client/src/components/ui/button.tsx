@@ -3,16 +3,18 @@ import {
   type MouseEvent as ReactMouseEvent,
 } from "react";
 
-import { Button } from "@client/shadcn/components/ui/button.js";
+import { Button, VariantsType } from "@client/shadcn/components/ui/button.js";
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: "primary" | "secondary" | "danger" | "success" | "warning";
+  variant?: VariantsType["variant"];
+  size?: VariantsType["size"];
 };
 
 function UIButton({
   children,
   onClick,
-  variant = "primary",
+  variant = "default",
+  size = "default",
   className,
   ...props
 }: ButtonProps) {
@@ -23,7 +25,8 @@ function UIButton({
   return (
     <Button
       className={`${className}`}
-      variant={"secondary"}
+      variant={variant}
+      size={size}
       onClick={handleClick}
       {...props}
     >

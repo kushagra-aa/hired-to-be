@@ -16,6 +16,7 @@
     "javacriptreact",
     "json"
   ],
+  "explorerExclude.backup": {},
   "files.exclude": {
     "**/.classpath": true,
     "**/.DS_Store": true,
@@ -26,7 +27,7 @@
     "**/.settings": true,
     "**/.svn": true,
     "**/.turbo": true,
-    "**/.wrangler": true,
+    "**/.wrangler": false,
     "**/dist": true,
     "**/node_modules": true,
     "**/Thumbs.db": true

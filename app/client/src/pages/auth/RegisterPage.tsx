@@ -32,10 +32,9 @@ export default function RegisterPage() {
   const handleFormSubmit = (data: RegisterFormType) => {
     register.mutate(
       {
-        full_name: data.full_name || "",
+        fullName: data.fullName || "",
         email: data.email,
-        password: data.password,
-        confirm_password: data.confirm_password,
+        googleID: data.googleID,
       },
       {
         onSuccess: async () => {
@@ -73,8 +72,8 @@ export default function RegisterPage() {
             control={form.control as unknown as FormControlType}
             label="Full Name"
             placeholder="Enter Full Name"
-            error={form.formState.errors?.full_name?.message}
-            {...form.register("full_name")}
+            error={form.formState.errors?.fullName?.message}
+            {...form.register("fullName")}
           />
           <UIInputField
             control={form.control as unknown as FormControlType}
@@ -89,22 +88,18 @@ export default function RegisterPage() {
             as="password"
             label="Password"
             placeholder="Enter Password"
-            error={form.formState.errors?.password?.message}
-            {...form.register("password")}
+            error={form.formState.errors?.googleID?.message}
+            {...form.register("googleID")}
           />
           <UIInputField
             control={form.control as unknown as FormControlType}
             as="password"
             label="Confirm Password"
             placeholder="Enter Password"
-            error={form.formState.errors?.confirm_password?.message}
-            {...form.register("confirm_password")}
+            error={form.formState.errors?.confirm_googleID?.message}
+            {...form.register("confirm_googleID")}
           />
-          <UIButton
-            type="submit"
-            variant="primary"
-            disabled={register.isPending}
-          >
+          <UIButton type="submit" disabled={register.isPending}>
             {register.isPending ? (
               <Loader variant="clip" size={"xs"} color="secondary" />
             ) : (
