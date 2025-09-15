@@ -1,0 +1,27 @@
+{
+  "dependencies": {
+    "@hiredtobe/eslint-config": "workspace:^",
+    "@hiredtobe/shared": "workspace:^",
+    "argon2-browser": "^1.18.0",
+    "drizzle-orm": "^0.44.5",
+    "hono": "^4.9.6",
+    "zod": "^4.1.5"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.31.4",
+    "wrangler": "^4.4.0"
+  },
+  "name": "@hiredtobe/server",
+  "private": true,
+  "scripts": {
+    "build": "tsc -p ../../tsconfig.json",
+    "cf-typegen": "wrangler types --env-interface CloudflareBindings",
+    "db:generate": "drizzle-kit generate --config drizzle.config.ts",
+    "db:migrate:local": "wrangler d1 migrations apply hiredtobe-db-dev --local  --env dev",
+    "db:migrate:remote": "wrangler d1 migrations apply hiredtobe-db --remote  --env production",
+    "deploy": "wrangler deploy --minify",
+    "dev": "wrangler dev --env dev"
+  },
+  "type": "module",
+  "version": "0.0.1"
+}

@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "baseUrl": "src",
+    "jsx": "react-jsx",
+    "jsxImportSource": "hono/jsx",
+    "paths": {
+      "@/server/*": ["*"]
+    },
+    "rootDir": "./",
+    "types": ["@cloudflare/workers-types"]
+  },
+  "extends": "../../tsconfig.json",
+  "include": ["src", "./eslint.config.ts", "./drizzle.config.ts"]
+}

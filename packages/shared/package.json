@@ -1,0 +1,18 @@
+{
+  "dependencies": {
+    "@hiredtobe/eslint-config": "workspace:^",
+    "axios": "^1.11.0",
+    "zod": "^4.1.5"
+  },
+  "exports": {
+    "./api": "./src/lib/api/index.ts",
+    "./entities": "./src/types/entities/index.ts",
+    "./lib": "./src/lib/index.ts",
+    "./schemas": "./src/schemas/index.ts",
+    "./types": "./src/types/index.ts",
+    "./utils": "./src/utils/index.ts"
+  },
+  "name": "@hiredtobe/shared",
+  "private": true,
+  "scripts": {}
+}

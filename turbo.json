@@ -6,7 +6,7 @@
             ],
             "outputs": [
                 "dist/**",
-                "app/client/dist/**"
+                "apps/client/dist/**"
             ]
         },
         "dev": {

@@ -1,25 +1,29 @@
 {
   "compilerOptions": {
-    "baseUrl": "./app",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
     "jsx": "react-jsx",
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "lib": ["ESNext"],
+    "module": "ESNext",
+    "moduleDetection": "force",
+    "moduleResolution": "Bundler",
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "outDir": "./dist",
     "paths": {
-      "@/*": ["app/*"],
-      "@client/*": ["client/src/*"],
-      "@server/*": ["server/src/*"],
-      "@shared/*": ["shared/*"]
+      "@/client/*": ["./apps/client/src/*"],
+      "@/server/*": ["./apps/server/src/*"],
+      "@/shared/*": ["./packages/shared/src/*"]
     },
     "resolveJsonModule": true,
-    "rootDir": "./app",
     "skipLibCheck": true,
     "strict": true,
-    "target": "ES2020",
-    "types": ["@cloudflare/workers-types"]
+    "target": "ESNext",
+    "types": ["@cloudflare/workers-types"],
+    "useDefineForClassFields": true
   },
-  "include": ["app"]
+  "include": ["apps", "packages", "eslint.config.ts"]
 }

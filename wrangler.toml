@@ -1,5 +1,5 @@
 name = "hiredtobe"
-main = "app/server/src/index.ts"
+main = "apps/server/src/index.ts"
 compatibility_date = "2025-09-02"
 
 dev.port = 8000
@@ -9,13 +9,14 @@ observability.logs.enabled = true
 # Dev environment (API only, Vite serves frontend)
 [env.dev]
 name = "hiredtobe-dev"
-main = "app/server/src/index.ts"
+main = "apps/server/src/index.ts"
 compatibility_date = "2025-09-02"
 
 [[env.dev.d1_databases]]
 binding = "DB"
 database_name = "hiredtobe-db-dev"
 database_id = "26efb6e8-622a-46e5-8f64-c94805273125"
+migrations_dir = "migrations"
 
 [env.dev.vars]
 NODE_ENV = "development"
@@ -24,16 +25,17 @@ SESSION_SECRET = "Secrett"
 # Production environment
 [env.production]
 name = "hiredtobe"
-main = "app/server/src/index.ts"
+main = "apps/server/src/index.ts"
 compatibility_date = "2025-09-02"
 
 [[env.production.d1_databases]]
 binding = "DB"
 database_name = "hiredtobe-db"
 database_id = "e07e498c-ed39-4805-a813-212d6bf95456"
+migrations_dir = "migrations"
 
 [env.production.assets]
-directory = "app/client/dist"
+directory = "apps/client/dist"
 
 [env.production.vars]
 NODE_ENV = "production"

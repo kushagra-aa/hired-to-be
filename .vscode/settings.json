@@ -9,12 +9,18 @@
     "source.sortImports": "always"
   },
   "editor.formatOnSave": true,
+  // "eslint.useFlatConfig": true,
   "eslint.validate": [
     "javascript",
     "typescript",
     "typescriptreact",
     "javacriptreact",
-    "json"
+    "json",
+    "vue",
+    "jsonc",
+    "gql",
+    "graphql",
+    "astro"
   ],
   "explorerExclude.backup": {},
   "files.exclude": {
@@ -27,10 +33,11 @@
     "**/.settings": true,
     "**/.svn": true,
     "**/.turbo": true,
-    "**/.wrangler": false,
+    "**/.wrangler": true,
     "**/dist": true,
     "**/node_modules": true,
     "**/Thumbs.db": true
   },
-  "stylelint.validate": ["css", "scss", "postcss"]
+  "stylelint.validate": ["css", "scss", "postcss"],
+  "typescript.tsdk": "node_modules\\typescript\\lib"
 }

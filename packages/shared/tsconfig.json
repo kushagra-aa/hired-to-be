@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "baseUrl": "src",
+    "declaration": true,
+    "declarationMap": true,
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "paths": {
+      "@/shared/*": ["*"]
+    },
+    "rootDir": "."
+  },
+  "extends": "../../tsconfig.json",
+  "include": ["src", "./eslint.config.ts"],
+  "watchOptions": {
+    "excludeDirectories": ["**/node_modules", "**/packages/web"]
+  }
+}
