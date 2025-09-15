@@ -5,7 +5,6 @@
                 "^build"
             ],
             "outputs": [
-                "dist/**",
                 "apps/client/dist/**"
             ]
         },

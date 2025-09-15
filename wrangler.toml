@@ -30,6 +30,8 @@ compatibility_date = "2025-09-02"
 
 [[env.production.d1_databases]]
 binding = "DB"
+# database_name = "hiredtobe-db-dev"
+# database_id = "26efb6e8-622a-46e5-8f64-c94805273125"
 database_name = "hiredtobe-db"
 database_id = "e07e498c-ed39-4805-a813-212d6bf95456"
 migrations_dir = "migrations"

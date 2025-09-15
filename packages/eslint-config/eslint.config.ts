@@ -4,7 +4,7 @@ import prettierPlugin from "eslint-plugin-prettier";
 import react from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
 import { defineConfig as esLintDefineConfig } from "eslint/config";
-import tseslint from "typescript-eslint";
+import * as tseslint from "typescript-eslint";
 
 type DefineConfigParamsType = Parameters<typeof esLintDefineConfig>;
 

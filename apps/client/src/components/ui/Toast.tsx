@@ -2,10 +2,12 @@ import { toast, Toaster, type ToasterProps } from "sonner";
 
 type ToastPropType = ToasterProps;
 
-type MakeToast = (...args: Parameters<typeof toast>) => void;
-export const makeToast: MakeToast = (...args) => {
-  // @ts-ignore
-  return toast(...args);
+export const makeToast = {
+  success: toast.success,
+  error: toast.error,
+  warning: toast.warning,
+  info: toast.info,
+  loading: toast.loading,
 };
 
 function Toast(props: ToastPropType) {

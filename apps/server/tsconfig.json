@@ -3,6 +3,7 @@
     "baseUrl": "src",
     "jsx": "react-jsx",
     "jsxImportSource": "hono/jsx",
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "paths": {
       "@/server/*": ["*"]
     },
