@@ -29,7 +29,7 @@ const getGoogleOAuthToken = async (env: EnvType, code: string) => {
       grant_type: "authorization_code",
       redirect_uri: `${env.CLIENT_BASE_URI}${env.OAUTH_REDIRECT_ENDPOINT}`,
     })
-    .then((res) => res as GoogleTokenResponseType);
+    .then((res) => res as unknown as GoogleTokenResponseType);
   return tokenResp;
 };
 
@@ -41,7 +41,7 @@ const getGoogleUserInfo = async (env: EnvType, accessToken: string) => {
       {},
       { headers: { Authorization: `Bearer ${accessToken}` } },
     )
-    .then((res) => res as GoogleUserResponseType);
+    .then((res) => res as unknown as GoogleUserResponseType);
   return userInfoResp;
 };
 
