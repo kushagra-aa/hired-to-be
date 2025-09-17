@@ -21,6 +21,11 @@ export type UserLoginPayloadType = Omit<UserBaseEntity, "role" | "fullName">;
 
 export type UserResponseType = UserEntity;
 
-export type UserSessionType = Omit<UserBaseEntity, "fullName">;
+export type UserLoginResponseType = UserEntity & { token: string };
+
+export type UserSessionType = Omit<
+  UserEntity,
+  "fullName" | "createdAt" | "updatedAt" | "isActive"
+>;
 
 export type UserSessionResponseType = { user: UserSessionType; token: string };

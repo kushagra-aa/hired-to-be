@@ -1,5 +1,5 @@
 import { UserRoleEnum } from "@hiredtobe/shared/entities";
-import { InferSelectModel } from "drizzle-orm";
+import { InferSelectModel, relations } from "drizzle-orm";
 import {
   integer,
   sqliteTable,
@@ -20,12 +20,65 @@ export const userModel = sqliteTable(
       .notNull()
       .$defaultFn(() => UserRoleEnum.user),
 
-    ...baseFields,
+    ...baseFields, // Does not Include `id`
   },
   (t) => [
     uniqueIndex("user_email_idx").on(t.email),
     uniqueIndex("user_google_idx").on(t.googleID),
   ],
 );
-
 export type UserModelType = InferSelectModel<typeof userModel>;
+
+export const userCredentialModel = sqliteTable(
+  "user_credentials",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userID: integer("user_id")
+      .notNull()
+      .references(() => userModel.id, { onDelete: "cascade" }),
+    accessToken: text("access_token"),
+    refreshToken: text("refresh_token"),
+    provider: text("provider").notNull(),
+    expiry: integer("expiry", { mode: "timestamp" }).notNull(),
+
+    ...baseFields, // Does not Include `id`
+  },
+  (t) => ({
+    userProviderIdx: uniqueIndex("user_provider_idx").on(t.userID, t.provider),
+  }),
+);
+
+export const sessionModel = sqliteTable("sessions", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userID: integer("user_id")
+    .notNull()
+    .references(() => userModel.id, { onDelete: "cascade" }),
+  expiresAt: integer("expires_at", { mode: "timestamp_ms" }).notNull(),
+
+  ...baseFields, // Does not Include `id`
+});
+
+// User → Sessions (1:N)
+export const userRelations = relations(userModel, ({ many }) => ({
+  sessions: many(sessionModel),
+  credentials: many(userCredentialModel),
+}));
+
+// Session → User (N:1)
+export const sessionRelations = relations(sessionModel, ({ one }) => ({
+  user: one(userModel, {
+    fields: [sessionModel.userID],
+    references: [userModel.id],
+  }),
+}));
+
+// UserCredential → User (N:1)
+export const userCredentialRelations = relations(
+  userCredentialModel,
+  ({ one }) => ({
+    user: one(userModel, {
+      fields: [userCredentialModel.userID],
+      references: [userModel.id],
+    }),
+  }),
+);

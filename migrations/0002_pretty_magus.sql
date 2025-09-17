@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX `user_provider_idx` ON `user_credentials` (`user_id`,`provider`);

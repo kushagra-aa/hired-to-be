@@ -8,6 +8,27 @@
       "when": 1757941925985,
       "tag": "0000_youthful_richard_fisk",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1758117730927,
+      "tag": "0001_mean_the_initiative",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1758122793082,
+      "tag": "0002_pretty_magus",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1758127199699,
+      "tag": "0003_flowery_silverclaw",
+      "breakpoints": true
     }
   ]
 }

@@ -1,7 +1,8 @@
 import { UserRoleEnum } from "./entities/user.entity";
 
 export type SessionPayload = {
-  id: string;
+  sub: string;
+  sid: string;
   role: UserRoleEnum;
   exp: number;
   iat: number;

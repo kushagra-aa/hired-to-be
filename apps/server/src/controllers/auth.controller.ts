@@ -1,68 +1,66 @@
 import { Context } from "hono";
 
 import { getDb } from "@/server/database";
-import {
-  sendAPIError,
-  sendAPIResponse,
-  sendValidationError,
-} from "@/server/lib/response";
+import { sendAPIError, sendAPIResponse } from "@/server/lib/response";
 import authService from "@/server/services/auth.service";
 import sessionService, {
   clearSessionCookie,
   setSessionCookie,
   validateRequestSession,
 } from "@/server/services/session.service";
-import { authValidator } from "@/server/utils/validators/auth.validator";
 
-async function registerController(c: Context) {
-  const db = getDb(c.env);
-  const payload = await c.req.json();
-  const validationResult = authValidator.validateRegister(payload);
-  if (!validationResult.isValid && validationResult.errors)
-    return sendValidationError(c, validationResult.errors);
-  const userResp = await authService.register(db, payload);
-  if (userResp.error || !userResp.data) return sendAPIError(c, userResp);
+import { getEnv } from "../config/env";
 
-  const token = await sessionService.createSession(
-    c,
-    userResp.data.googleID,
-    userResp.data.role,
+async function googleLoginController(c: Context) {
+  const env = getEnv(c);
+  const oAuthURL = new URL(env.GOOGLE_ACCOUNTS_URL);
+
+  oAuthURL.searchParams.set("client_id", env.GOOGLE_CLIENT_ID);
+  oAuthURL.searchParams.set(
+    "redirect_uri",
+    `${env.CLIENT_BASE_URI}${env.OAUTH_REDIRECT_ENDPOINT}`,
   );
+  oAuthURL.searchParams.set("response_type", "code");
+  oAuthURL.searchParams.set("scope", env.GOOGLE_OAUTH_SCOPES);
+  // TODO: state
+  oAuthURL.searchParams.set("access_type", "offline");
+  oAuthURL.searchParams.set("prompt", "consent");
 
-  await setSessionCookie(c, token);
-
-  return sendAPIResponse(c, {
-    data: userResp.data,
-    message: userResp.message,
-    status: userResp.status,
-  });
+  return c.redirect(oAuthURL.toString());
 }
 
-async function loginController(c: Context) {
+async function googleCallbackController(c: Context) {
   const db = getDb(c.env);
-  const payload = await c.req.json();
-  const validationResult = authValidator.validateLogin(payload);
-  if (!validationResult.isValid && validationResult.errors)
-    return sendValidationError(c, validationResult.errors);
-  const userResp = await authService.login(db, payload);
+  const env = getEnv(c);
+  const authCode = c.req.query("code");
+  const errorCode = c.req.query("error");
+  if (!authCode)
+    return sendAPIError(c, {
+      error: "Invalid Request",
+      message:
+        errorCode && errorCode === "access_denied"
+          ? "You need to select an account and allow to Login"
+          : "Authorization Code is required",
+      status: 400,
+    });
+  const userResp = await authService.googleOAuth(env, db, authCode);
   if (userResp.error || !userResp.data) return sendAPIError(c, userResp);
 
   const token = await sessionService.createSession(
     c,
-    userResp.data.googleID,
+    userResp.data.id,
     userResp.data.role,
   );
 
   await setSessionCookie(c, token);
 
-  return sendAPIResponse(c, {
-    data: userResp.data,
-    message: userResp.message,
-    status: userResp.status,
-  });
+  return c.redirect(`${env.CLIENT_BASE_URI}`);
 }
 
 async function logoutController(c: Context) {
+  const sessionResp = await validateRequestSession(c);
+  if (sessionResp && sessionResp.session)
+    await sessionService.endSession(c, sessionResp?.session?.sid);
   await clearSessionCookie(c);
   return sendAPIResponse(c, {
     data: {},
@@ -72,11 +70,11 @@ async function logoutController(c: Context) {
 }
 
 async function checkSessionController(c: Context) {
-  const sessionResp = await validateRequestSession(c);
+  const sessionResp = await sessionService.validateSession(c);
   if (sessionResp && sessionResp.session) {
     return sendAPIResponse(c, {
       data: {
-        user: { id: sessionResp.session.id, role: sessionResp.session.role },
+        user: { id: sessionResp.session.sub, role: sessionResp.session.role },
         token: sessionResp.token,
       },
       message: "User is LoggedIn",
@@ -92,8 +90,10 @@ async function checkSessionController(c: Context) {
 }
 
 export default {
-  register: registerController,
-  login: loginController,
+  google: {
+    login: googleLoginController,
+    callback: googleCallbackController,
+  },
   logout: logoutController,
   checkSession: checkSessionController,
 };

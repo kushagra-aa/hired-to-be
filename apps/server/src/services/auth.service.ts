@@ -1,5 +1,6 @@
 import {
-  UserLoginPayloadType,
+  ProvidersEnum,
+  UserLoginResponseType,
   UserRegisterPayloadType,
   UserResponseType,
 } from "@hiredtobe/shared/entities";
@@ -8,6 +9,11 @@ import { RegistryReturnType } from "@hiredtobe/shared/types";
 import { DbType } from "@/server/database";
 import userRepository from "@/server/repositories/user.repository";
 import { toUserDTO } from "@/server/utils/toUserDTO";
+
+import { EnvType } from "../config/env";
+import { UserModelType } from "../database/models";
+import googleApi from "../lib/api/google.api";
+import userCredentialRepository from "../repositories/userCredential.repository";
 
 export async function registerService(
   db: DbType,
@@ -37,30 +43,59 @@ export async function loginUser(db: DbType, googleID: string) {
   return userRepository.findUserByGoogleId(db, googleID);
 }
 
-async function loginService(
+async function googleOAuthService(
+  env: EnvType,
   db: DbType,
-  payload: UserLoginPayloadType,
-): RegistryReturnType<UserResponseType> {
-  const existingUser = await userRepository.findUserByEmail(db, payload.email);
+  code: string,
+): RegistryReturnType<UserLoginResponseType> {
+  const tokenResp = await googleApi.getOAuthToken(env, code);
+  if (!tokenResp || !tokenResp.access_token) {
+    return {
+      error: "Failed to fetch access token from Google",
+      message: "OAuth Error",
+      status: 500,
+    };
+  }
+
+  const { access_token: accessToken } = tokenResp;
+  const userInfoResp = await googleApi.getUserInfo(env, accessToken);
+  const { email: userEmail, name } = userInfoResp;
+
+  const existingUser = await userRepository.findUserByEmail(db, userEmail);
+  let newUser: UserModelType[] = [];
+
   if (!existingUser) {
-    return {
-      error: "Invalid Credentials",
-      message: "Invalid Credentials",
-      status: 401,
+    const newUserPayload: UserRegisterPayloadType = {
+      email: userEmail,
+      fullName: name,
+      googleID: userInfoResp.sub,
     };
+
+    newUser = await userRepository.createUser(db, newUserPayload);
+    if (!newUser || newUser.length === 0) {
+      return {
+        error: "Failed to create user",
+        status: 500,
+        message: "User Registration Error",
+      };
+    }
   }
-  if (existingUser.googleID !== payload.googleID) {
-    return {
-      error: "Invalid Credentials",
-      message: "Invalid Credentials",
-      status: 401,
-    };
+  const user: UserModelType = existingUser ? existingUser : newUser[0];
+  if (user) {
+    await userCredentialRepository.createUserCredential(db, {
+      accessToken: tokenResp.access_token,
+      expiry: tokenResp.expires_in,
+      provider: ProvidersEnum.google,
+      refreshToken: tokenResp.refresh_token,
+      userID: user.id,
+    });
   }
+
   return {
-    data: toUserDTO(existingUser),
+    data: { ...toUserDTO(user), token: accessToken },
     message: "User LoggedIn Successfully",
     status: 200,
   };
 }
 
-export default { register: registerService, login: loginService };
+export default { register: registerService, googleOAuth: googleOAuthService };

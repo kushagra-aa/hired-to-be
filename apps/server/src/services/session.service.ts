@@ -1,5 +1,9 @@
 import { UserRoleEnum, UserSessionType } from "@hiredtobe/shared/entities";
 import { SessionPayload } from "@hiredtobe/shared/types";
+import {
+  expiresIn as getExpiresIn,
+  nowInSeconds,
+} from "@hiredtobe/shared/utils";
 import { Context } from "hono";
 import { deleteCookie, getCookie, setCookie } from "hono/cookie";
 
@@ -12,18 +16,23 @@ import {
 } from "@/server/lib/session";
 import { SESSION_COOKIE_NAME } from "@/server/utils/constants";
 
+import { getDb } from "../database";
+import sessionRepository from "../repositories/session.repository";
+import userRepository from "../repositories/user.repository";
+
 /**
  * Create a new session token for a user
  */
 const createSessionService = async (
   c: Context,
-  userID: UserSessionType["googleID"],
+  userID: UserSessionType["id"],
   role: UserRoleEnum,
   options?: {
     rememberMe?: boolean;
     deviceInfo?: string;
   },
 ): Promise<string> => {
+  const db = getDb(c.env);
   const { SESSION_SECRET, SESSION_MAX_AGE_DAYS, SESSION_MAX_AGE_HOURS } =
     getEnv(c);
 
@@ -32,22 +41,30 @@ const createSessionService = async (
     hours: SESSION_MAX_AGE_HOURS,
   });
 
-  const now = Math.floor(Date.now());
-  const expiresIn = getSessionAge(
+  const nowSec = nowInSeconds();
+  const sessionAge = getSessionAge(
     sessionConfig.defaultTTL,
     options?.rememberMe,
   );
+  const expiresIn = getExpiresIn(sessionAge);
+
+  const session = await sessionRepository.createSession(db, {
+    expiresAt: expiresIn,
+    userID: userID,
+  });
+  if (!session || !session.length) throw new Error("Failed to create session");
 
   const payload: SessionPayload = {
-    id: String(userID),
+    sub: String(userID),
+    sid: String(session[0].id),
     role,
-    iat: now / 1000,
-    exp: now / 1000 + expiresIn, // in seconds
-    // sessionId: crypto.randomUUID(), // optional for stateful sessions
-    // deviceInfo: options?.deviceInfo,
+    iat: nowSec,
+    exp: expiresIn, // in seconds
   };
 
-  return await createSessionToken(payload, sessionConfig);
+  const token = await createSessionToken(payload, sessionConfig);
+
+  return token;
 };
 
 /**
@@ -55,8 +72,11 @@ const createSessionService = async (
  */
 const validateSessionService = async (
   c: Context,
-  token: string,
-): Promise<SessionPayload | null> => {
+): Promise<{ session: SessionPayload | null; token: string } | null> => {
+  const token = getSessionFromRequest(c);
+  if (!token) return null;
+
+  const db = getDb(c.env);
   const { SESSION_SECRET, SESSION_MAX_AGE_DAYS, SESSION_MAX_AGE_HOURS } =
     getEnv(c);
 
@@ -65,23 +85,31 @@ const validateSessionService = async (
     hours: SESSION_MAX_AGE_HOURS,
   });
 
-  if (!token) return null;
-
   const payload = await validateSessionToken(token, sessionConfig);
   if (!payload) return null;
+  const session = await sessionRepository.findSessionByActiveSesssionId(
+    db,
+    Number(payload.sid),
+  );
+  if (!session) return null;
+  const user = await userRepository.findActiveUserById(db, Number(payload.sid));
+  if (!user) return null;
+  return { session: payload, token };
+};
 
-  // TODO: Add business validations (user active, permissions, etc.)
-  return payload;
+const endSessionService = async (
+  c: Context,
+  sessionID: SessionPayload["sid"],
+): Promise<void> => {
+  const db = getDb(c.env);
+  await sessionRepository.deleteSessionBySesssionID(db, Number(sessionID));
 };
 
 /**
  * Quick check if session is valid
  */
-export const isSessionValid = async (
-  c: Context,
-  token: string,
-): Promise<boolean> => {
-  const payload = await validateSessionService(c, token);
+export const isSessionValid = async (c: Context): Promise<boolean> => {
+  const payload = await validateSessionService(c);
   return payload !== null;
 };
 
@@ -102,7 +130,7 @@ export const getUserIdFromToken = async (
     });
 
     const payload = await validateSessionToken(token, sessionConfig);
-    return payload?.id || null;
+    return payload?.sub || null;
   } catch {
     return null;
   }
@@ -190,11 +218,12 @@ export const validateRequestSession = async (
 ): Promise<{ session: SessionPayload | null; token: string } | null> => {
   const token = getSessionFromRequest(c);
   if (!token) return null;
-  const session = await validateSessionService(c, token);
-  return { session, token };
+  const session = await validateSessionService(c);
+  return session;
 };
 
 export default {
   createSession: createSessionService,
   validateSession: validateSessionService,
+  endSession: endSessionService,
 };
