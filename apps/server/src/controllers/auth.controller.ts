@@ -31,34 +31,45 @@ async function googleLoginController(c: Context) {
 }
 
 async function googleCallbackController(c: Context) {
-  const db = getDb(c.env);
   const env = getEnv(c);
-  const authCode = c.req.query("code");
-  const errorCode = c.req.query("error");
-  if (!authCode)
+  try {
+    const db = getDb(c.env);
+    const authCode = c.req.query("code");
+    const errorCode = c.req.query("error");
+    if (!authCode)
+      return c.redirect(
+        buildUrl(`${env.CLIENT_BASE_URI}`, "", {
+          error_code: errorCode,
+          message:
+            errorCode && errorCode === "access_denied"
+              ? "You need to select an account and allow to Login"
+              : "Something Went Wrong!",
+          success: false,
+        }),
+      );
+    const userResp = await authService.googleOAuth(env, db, authCode);
+    if (userResp.error || !userResp.data)
+      return c.redirect(buildUrl(`${env.CLIENT_BASE_URI}`, "", userResp));
+
+    const token = await sessionService.createSession(
+      c,
+      userResp.data.id,
+      userResp.data.role,
+    );
+
+    await setSessionCookie(c, token);
+
+    return c.redirect(
+      buildUrl(`${env.CLIENT_BASE_URI}`, "", { success: true }),
+    );
+  } catch {
     return c.redirect(
       buildUrl(`${env.CLIENT_BASE_URI}`, "", {
-        error_code: errorCode,
-        message:
-          errorCode && errorCode === "access_denied"
-            ? "You need to select an account and allow to Login"
-            : "Something Went Wrong!",
+        message: "Something Went Wrong!",
         success: false,
       }),
     );
-  const userResp = await authService.googleOAuth(env, db, authCode);
-  if (userResp.error || !userResp.data)
-    return c.redirect(buildUrl(`${env.CLIENT_BASE_URI}`, "", userResp));
-
-  const token = await sessionService.createSession(
-    c,
-    userResp.data.id,
-    userResp.data.role,
-  );
-
-  await setSessionCookie(c, token);
-
-  return c.redirect(buildUrl(`${env.CLIENT_BASE_URI}`, "", { success: true }));
+  }
 }
 
 async function logoutController(c: Context) {

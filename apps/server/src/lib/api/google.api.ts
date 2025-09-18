@@ -1,4 +1,5 @@
 import { APIClient } from "@hiredtobe/shared/api";
+import { buildUrl } from "@hiredtobe/shared/utils";
 
 import { EnvType } from "@/server/config/env";
 
@@ -27,7 +28,10 @@ const getGoogleOAuthToken = async (env: EnvType, code: string) => {
       client_secret: env.GOOGLE_CLIENT_SECRET,
       code,
       grant_type: "authorization_code",
-      redirect_uri: `${env.CLIENT_BASE_URI}${env.OAUTH_REDIRECT_ENDPOINT}`,
+      redirect_uri: buildUrl(
+        `${env.CLIENT_BASE_URI}`,
+        `${env.OAUTH_REDIRECT_ENDPOINT}`,
+      ),
     })
     .then((res) => res as unknown as GoogleTokenResponseType);
   return tokenResp;
