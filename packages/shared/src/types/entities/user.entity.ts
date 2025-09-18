@@ -9,6 +9,7 @@ export enum UserRoleEnum {
 export type UserBaseEntity = {
   fullName?: string | null;
   email: string;
+  image: string;
   googleID: string;
   role: UserRoleEnum;
 };

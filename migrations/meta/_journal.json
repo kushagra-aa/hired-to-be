@@ -29,6 +29,41 @@
       "when": 1758127199699,
       "tag": "0003_flowery_silverclaw",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1758199886213,
+      "tag": "0004_panoramic_the_hand",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1758199929146,
+      "tag": "0005_woozy_stone_men",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1758201546865,
+      "tag": "0006_open_darkhawk",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "6",
+      "when": 1758202102617,
+      "tag": "0007_crazy_chamber",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1758202367355,
+      "tag": "0008_abnormal_speedball",
+      "breakpoints": true
     }
   ]
 }

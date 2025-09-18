@@ -92,7 +92,7 @@ const validateSessionService = async (
     Number(payload.sid),
   );
   if (!session) return null;
-  const user = await userRepository.findActiveUserById(db, Number(payload.sid));
+  const user = await userRepository.findActiveUserById(db, Number(payload.sub));
   if (!user) return null;
   return { session: payload, token };
 };

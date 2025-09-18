@@ -1,3 +1,4 @@
+import { buildUrl } from "@hiredtobe/shared/utils";
 import { Context } from "hono";
 
 import { getDb } from "@/server/database";
@@ -35,16 +36,19 @@ async function googleCallbackController(c: Context) {
   const authCode = c.req.query("code");
   const errorCode = c.req.query("error");
   if (!authCode)
-    return sendAPIError(c, {
-      error: "Invalid Request",
-      message:
-        errorCode && errorCode === "access_denied"
-          ? "You need to select an account and allow to Login"
-          : "Authorization Code is required",
-      status: 400,
-    });
+    return c.redirect(
+      buildUrl(`${env.CLIENT_BASE_URI}`, "", {
+        error_code: errorCode,
+        message:
+          errorCode && errorCode === "access_denied"
+            ? "You need to select an account and allow to Login"
+            : "Something Went Wrong!",
+        success: false,
+      }),
+    );
   const userResp = await authService.googleOAuth(env, db, authCode);
-  if (userResp.error || !userResp.data) return sendAPIError(c, userResp);
+  if (userResp.error || !userResp.data)
+    return c.redirect(buildUrl(`${env.CLIENT_BASE_URI}`, "", userResp));
 
   const token = await sessionService.createSession(
     c,
@@ -54,7 +58,7 @@ async function googleCallbackController(c: Context) {
 
   await setSessionCookie(c, token);
 
-  return c.redirect(`${env.CLIENT_BASE_URI}`);
+  return c.redirect(buildUrl(`${env.CLIENT_BASE_URI}`, "", { success: true }));
 }
 
 async function logoutController(c: Context) {

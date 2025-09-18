@@ -10,6 +10,7 @@ export type UserCredentialBaseEntity = {
   expiry: Date;
   userID: number;
   provider: ProvidersEnum;
+  scopes: string[];
 };
 
 export type UserCredentialEntity = UserCredentialBaseEntity & BaseEntity;

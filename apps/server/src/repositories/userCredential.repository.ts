@@ -18,6 +18,7 @@ export async function createUserCredential(
       accessToken: payload.accessToken,
       refreshToken: payload.refreshToken,
       provider: payload.provider,
+      scopes: payload.scopes,
       expiry: fromUnixSeconds(expiresIn(payload.expiry)),
     })
     .onConflictDoUpdate({
@@ -25,6 +26,7 @@ export async function createUserCredential(
       set: {
         accessToken: payload.accessToken,
         refreshToken: payload.refreshToken,
+        scopes: payload.scopes,
         expiry: fromUnixSeconds(expiresIn(payload.expiry)),
       },
     })

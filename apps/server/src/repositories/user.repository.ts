@@ -56,11 +56,29 @@ export async function findUserByEmail(
   });
 }
 
-export async function findActiveUserById(db: DbType, id: UserEntity["id"]) {
+export async function findActiveUserById(
+  db: DbType,
+  id: UserEntity["id"],
+  relations?: { sessions: boolean; credentials: boolean },
+) {
   return await db.query.userModel.findFirst({
     where(fields, operators) {
-      return operators.eq(fields.id, id) && operators.eq(fields.isActive, true);
+      return operators.and(
+        operators.eq(fields.id, id),
+        operators.eq(fields.isActive, true),
+      );
     },
+    with:
+      relations && relations.sessions && relations.credentials
+        ? {
+            credentials: true,
+            sessions: true,
+          }
+        : relations && relations.sessions
+          ? { sessions: true }
+          : relations && relations.credentials
+            ? { credentials: true }
+            : undefined,
   });
 }
 

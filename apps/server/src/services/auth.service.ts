@@ -67,6 +67,7 @@ async function googleOAuthService(
   if (!existingUser) {
     const newUserPayload: UserRegisterPayloadType = {
       email: userEmail,
+      image: userInfoResp.picture || "",
       fullName: name,
       googleID: userInfoResp.sub,
     };
@@ -86,6 +87,7 @@ async function googleOAuthService(
       accessToken: tokenResp.access_token,
       expiry: tokenResp.expires_in,
       provider: ProvidersEnum.google,
+      scopes: tokenResp.scope.split(" "),
       refreshToken: tokenResp.refresh_token,
       userID: user.id,
     });
