@@ -38,3 +38,21 @@ directory = "apps/client/dist"
 
 [env.production.vars]
 NODE_ENV = "production"
+
+CLIENT_BASE_URI = "https://hiredtobe.kushagra-pyjs.workers.dev/"
+# OAuth redirect URI
+OAUTH_REDIRECT_ENDPOINT = "/api/auth/google/callback"
+
+# Google Accounts API
+GOOGLE_ACCOUNTS_URL = "https://accounts.google.com/o/oauth2/v2/auth"
+
+# Google Base URLs
+GOOGLE_API_BASE_URL = "https://www.googleapis.com"
+GOOGLE_OAUTH_API_BASE_URL = "https://oauth2.googleapis.com"
+
+# Google Scopes
+GOOGLE_OAUTH_SCOPES = "openid https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email"
+
+# Google Endpoints
+GOOGLE_OAUTH_TOKEN_ENDPOINT = "/token"
+GOOGLE_API_USER_ENDPOINT = "/oauth2/v3/userinfo"

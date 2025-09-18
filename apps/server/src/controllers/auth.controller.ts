@@ -14,20 +14,20 @@ import { getEnv } from "../config/env";
 
 async function googleLoginController(c: Context) {
   const env = getEnv(c);
-  const oAuthURL = new URL(env.GOOGLE_ACCOUNTS_URL);
 
-  oAuthURL.searchParams.set("client_id", env.GOOGLE_CLIENT_ID);
-  oAuthURL.searchParams.set(
-    "redirect_uri",
-    `${env.CLIENT_BASE_URI}${env.OAUTH_REDIRECT_ENDPOINT}`,
+  return c.redirect(
+    buildUrl(`${env.GOOGLE_ACCOUNTS_URL}`, "", {
+      client_id: env.GOOGLE_CLIENT_ID,
+      redirect_uri: buildUrl(
+        `${env.CLIENT_BASE_URI}`,
+        `${env.OAUTH_REDIRECT_ENDPOINT}`,
+      ),
+      response_type: "code",
+      scope: env.GOOGLE_OAUTH_SCOPES,
+      access_type: "offline",
+      prompt: "consent",
+    }),
   );
-  oAuthURL.searchParams.set("response_type", "code");
-  oAuthURL.searchParams.set("scope", env.GOOGLE_OAUTH_SCOPES);
-  // TODO: state
-  oAuthURL.searchParams.set("access_type", "offline");
-  oAuthURL.searchParams.set("prompt", "consent");
-
-  return c.redirect(oAuthURL.toString());
 }
 
 async function googleCallbackController(c: Context) {

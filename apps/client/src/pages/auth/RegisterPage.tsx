@@ -35,6 +35,7 @@ export default function RegisterPage() {
         fullName: data.fullName || "",
         email: data.email,
         googleID: data.googleID,
+        image: "",
       },
       {
         onSuccess: async () => {

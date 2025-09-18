@@ -25,7 +25,7 @@ export function useRegister() {
   const setUser = useAuth((s) => s.login);
   return useAppMutation({
     mutationFn: ({ fullName, email, googleID }: UserRegisterPayloadType) =>
-      registerAPI({ fullName, email, googleID }),
+      registerAPI({ fullName, email, googleID, image: "" }),
     onSuccess: (user) => {
       const { data: safeUser } = user;
       setUser(safeUser, "Token");

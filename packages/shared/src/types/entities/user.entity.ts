@@ -18,7 +18,7 @@ export type UserEntity = UserBaseEntity & BaseEntity;
 
 export type UserRegisterPayloadType = Omit<UserBaseEntity, "role">;
 
-export type UserLoginPayloadType = Omit<UserBaseEntity, "role" | "fullName">;
+export type UserLoginPayloadType = Pick<UserBaseEntity, "email" | "googleID">;
 
 export type UserResponseType = UserEntity;
 

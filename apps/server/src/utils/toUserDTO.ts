@@ -12,5 +12,6 @@ export function toUserDTO(dbUser: UserModelType): UserEntity {
     isActive: dbUser.isActive,
     createdAt: new Date(dbUser.createdAt), // integer → Date
     updatedAt: new Date(dbUser.updatedAt),
+    image: dbUser.image ?? "",
   };
 }
