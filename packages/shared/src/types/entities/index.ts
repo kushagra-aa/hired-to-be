@@ -1,3 +1,6 @@
+export * from "./job.entity";
+export * from "./organization.entity";
+export * from "./recruiter.entity";
 export * from "./user.entity";
 export * from "./userCredentials.entity";
 

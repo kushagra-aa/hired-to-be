@@ -30,7 +30,6 @@ export const userModel = sqliteTable(
 );
 export type UserModelType = InferSelectModel<typeof userModel>;
 
-// User → Sessions (1:N)
 export const userRelations = relations(userModel, ({ many }) => ({
   sessions: many(sessionModel),
   credentials: many(userCredentialModel),
@@ -51,9 +50,7 @@ export const userCredentialModel = sqliteTable(
 
     ...baseFields, // Does not Include `id`
   },
-  (t) => ({
-    userProviderIdx: uniqueIndex("user_provider_idx").on(t.userID, t.provider),
-  }),
+  (t) => [uniqueIndex("user_provider_idx").on(t.userID, t.provider)],
 );
 
 // UserCredential → User (N:1)
