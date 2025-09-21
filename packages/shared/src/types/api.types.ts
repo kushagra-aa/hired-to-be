@@ -10,6 +10,7 @@ export type PaginationResponseType = {
   count: number;
   page: number;
   pageSize: number;
+  total?: number;
 };
 
 export type CursorPaginationResponseType = {
@@ -17,6 +18,7 @@ export type CursorPaginationResponseType = {
   pageSize: number;
   count: number;
   hasMore: boolean;
+  total?: number;
 };
 
 export type ErrorResponseType = {

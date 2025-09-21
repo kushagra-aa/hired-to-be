@@ -9,3 +9,9 @@ export type OrganizationBaseEntity = {
 };
 
 export type OrganizationEntity = OrganizationBaseEntity & BaseEntity;
+
+export type OrganizationAddPayloadType = OrganizationBaseEntity & {
+  userID: number;
+};
+
+export type OrganizationEditPayloadType = Partial<OrganizationBaseEntity>;

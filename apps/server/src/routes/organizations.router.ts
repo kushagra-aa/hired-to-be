@@ -10,6 +10,7 @@ export const organizationsRoutes = new Hono();
 organizationsRoutes.use("/*", ...withAuthMiddlewares()); // use this approach for 'global' application of middleware
 
 organizationsRoutes.get("", organizationController.getOrganizations);
+organizationsRoutes.post("", organizationController.addOrganization);
 
 organizationsRoutes.get("/:id", (c: Context) => {
   const { id } = c.req.param();
@@ -19,3 +20,4 @@ organizationsRoutes.get("/:id", (c: Context) => {
     status: 200,
   });
 });
+organizationsRoutes.patch("/:id", organizationController.editOrganization);
