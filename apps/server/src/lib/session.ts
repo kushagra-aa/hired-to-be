@@ -6,15 +6,17 @@ import { decrypt, encrypt } from "./jwt";
 export const getSessionConfig = (
   secret: string,
   ttl: { days: number; hours: number },
-): SessionConfigType => ({
-  secretKey: secret,
-  defaultTTL:
-    (ttl.days || 1) *
-    (ttl.days === 1 ? 24 + ttl.hours : ttl.hours) *
-    60 *
-    60 *
-    1000, // days * hours in milliseconds
-});
+): SessionConfigType => {
+  return {
+    secretKey: secret,
+    defaultTTL:
+      (ttl.days || 1) *
+      (ttl.days === 1 ? 24 + ttl.hours : ttl.hours || 1) *
+      60 *
+      60 *
+      1000, // days * hours in milliseconds
+  };
+};
 
 export const getSessionAge = (defaultTTL: number, rememberMe?: boolean) =>
   rememberMe
