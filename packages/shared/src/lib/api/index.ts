@@ -5,7 +5,11 @@ import axios, {
   type AxiosResponse,
 } from "axios";
 
-import { ErrorResponseType, SuccessResponseType } from "@/shared/types";
+import {
+  ErrorResponseType,
+  StatusCode,
+  SuccessResponseType,
+} from "@/shared/types";
 
 export function objectToFormData(
   obj: Record<string, string | number>,
@@ -27,13 +31,13 @@ const DEFAULT_HEADERS = {
 
 // Custom error class to provide consistent error information to the caller
 export class ApiError extends Error {
-  statusCode: number;
+  statusCode: StatusCode;
   data: ErrorResponseType | undefined;
   originalError: AxiosError | Error | undefined;
 
   constructor(
     message: string,
-    statusCode: number = 0,
+    statusCode: StatusCode = 500,
     data?: ErrorResponseType,
     originalError?: AxiosError | Error,
   ) {
@@ -118,7 +122,7 @@ export class APIClient {
           return Promise.reject(
             new ApiError(
               error.message,
-              error.response.status,
+              error.response.status as StatusCode,
               (error.response.data ||
                 error.response) as unknown as ErrorResponseType,
               error,
