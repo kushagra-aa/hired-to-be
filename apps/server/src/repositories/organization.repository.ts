@@ -4,7 +4,7 @@ import {
   OrganizationEntity,
   UserEntity,
 } from "@hiredtobe/shared/entities";
-import { eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 
 import { DbType } from "@/server/database";
 import { organizationModel } from "@/server/database/models";
@@ -26,6 +26,20 @@ async function editOrganization(
     .returning();
 }
 
+async function getTotalOrganizationsByUserId(
+  db: DbType,
+  userID: UserEntity["id"],
+) {
+  return await db
+    .select({ count: sql<number>`count(*)` })
+    .from(organizationModel)
+    .where(
+      and(
+        eq(organizationModel.userID, userID),
+        eq(organizationModel.isActive, true),
+      ),
+    );
+}
 async function findOrganizationsByUserId(
   db: DbType,
   userID: UserEntity["id"],
@@ -40,8 +54,12 @@ async function findOrganizationsByUserId(
             ? operators.and(
                 operators.eq(fields.userID, userID),
                 operators.gt(fields.id, cursor),
+                operators.eq(fields.isActive, true),
               )
-            : operators.eq(fields.userID, userID),
+            : operators.and(
+                operators.eq(fields.userID, userID),
+                operators.eq(fields.isActive, true),
+              ),
         orderBy: (fields, { asc }) => [asc(fields.createdAt)],
         limit,
       }),
@@ -70,10 +88,30 @@ async function findOrganizationByID(db: DbType, id: OrganizationEntity["id"]) {
   });
 }
 
+async function deleteOrganization(
+  db: DbType,
+  id: OrganizationEntity["id"],
+  config?: { isSoftDelete?: boolean },
+) {
+  if (config && config.isSoftDelete) {
+    return await db
+      .update(organizationModel)
+      .set({ isActive: false })
+      .where(eq(organizationModel.id, id))
+      .returning();
+  }
+  return await db
+    .delete(organizationModel)
+    .where(eq(organizationModel.id, id))
+    .returning();
+}
+
 export default {
   addOrganization,
   editOrganization,
   findOrganizationsByUserId,
+  getTotalOrganizationsByUserId,
   findOrganizationByNameAndUserID,
   findOrganizationByID,
+  deleteOrganization,
 };

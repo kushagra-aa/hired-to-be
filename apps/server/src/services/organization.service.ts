@@ -21,6 +21,11 @@ async function getUserOrganizationsService(
     pageSize,
     cursor,
   );
+  const [total] = await organizationRepository.getTotalOrganizationsByUserId(
+    db,
+    userID,
+  );
+
   return {
     data: organizations.data,
     cursorPagination: {
@@ -28,6 +33,7 @@ async function getUserOrganizationsService(
       hasMore: organizations.hasMore,
       count: organizations.data.length,
       nextCursor: organizations.nextCursor,
+      total: total.count,
     },
   };
 }
@@ -57,14 +63,30 @@ async function editOrganizationService(
   db: DbType,
   id: OrganizationEntity["id"],
   payload: OrganizationEditPayloadType,
+  userID: UserEntity["id"],
 ): ServiceReturnType<OrganizationEntity> {
-  const exisiting = await organizationRepository.findOrganizationByID(db, id);
-  if (!exisiting)
+  const org = await organizationRepository.findOrganizationByID(db, id);
+  if (!org)
     return {
       error: "Not Found",
       message: "No Organization Found with this ID",
       status: 404,
     };
+  if (payload.name) {
+    const exisiting =
+      await organizationRepository.findOrganizationByNameAndUserID(
+        db,
+        payload.name,
+        userID,
+      );
+    if (exisiting)
+      return {
+        error: "Conflict",
+        errors: { name: ["Organization with this name already exists"] },
+        message: "Organization with this name already exists",
+        status: 409,
+      };
+  }
   const [newOrg] = await organizationRepository.editOrganization(
     db,
     id,
@@ -73,8 +95,41 @@ async function editOrganizationService(
   return { data: newOrg };
 }
 
+async function deleteOrganizationService(
+  db: DbType,
+  id: OrganizationEntity["id"],
+  userID: UserEntity["id"],
+  isSoftDelete = true,
+): ServiceReturnType<OrganizationEntity> {
+  const org = await organizationRepository.findOrganizationByID(db, id);
+  if (!org)
+    return {
+      error: "Not Found",
+      message: "No Organization Found with this ID",
+      status: 404,
+    };
+  const exisiting =
+    await organizationRepository.findOrganizationByNameAndUserID(
+      db,
+      org.name,
+      userID,
+    );
+  if (!exisiting)
+    return {
+      error: "UnAuthorized",
+      message: "You are not authorized to delete this organization",
+      status: 401,
+    };
+
+  const [newOrg] = await organizationRepository.deleteOrganization(db, id, {
+    isSoftDelete,
+  });
+  return { data: newOrg };
+}
+
 export default {
   getUserOrganizations: getUserOrganizationsService,
   addOrganization: addOrganizationService,
   editOrganization: editOrganizationService,
+  deleteOrganization: deleteOrganizationService,
 };
