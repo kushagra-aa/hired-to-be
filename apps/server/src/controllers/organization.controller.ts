@@ -44,23 +44,25 @@ async function addOrganizationController(c: Context) {
   const body = await c.req.json();
   const validationResult = organizationValidator.validateAdd(body || {});
   if (
-    !(validationResult.isValid || !validationResult.data) &&
+    (!validationResult.isValid || !validationResult.data) &&
     validationResult.errors
-  )
+  ) {
     return sendValidationError(c, validationResult.errors);
+  }
 
   const organizationsResp = await organizationService.addOrganization(db, {
     ...validationResult.data!,
     userID: Number(userID),
   });
 
-  if (organizationsResp.error || !organizationsResp.data)
+  if (organizationsResp.error || !organizationsResp.data) {
     return sendAPIError(c, {
       error: organizationsResp.error || "Failed to add organization",
       errors: organizationsResp.errors,
       message: organizationsResp.message || "Failed to add organization",
       status: organizationsResp.status || 500,
     });
+  }
 
   return sendAPIResponse(c, {
     data: organizationsResp.data,
@@ -75,10 +77,13 @@ async function editOrganizationController(c: Context) {
   const { id: userID } = c.get("user");
   const { id } = c.req.param();
   const body = await c.req.json();
-  const validationResult = organizationValidator.validateAdd(body);
-  if (!validationResult.isValid && validationResult.errors)
+  const validationResult = organizationValidator.validateEdit(body);
+  if (
+    (!validationResult.isValid || !validationResult.data) &&
+    validationResult.errors
+  ) {
     return sendValidationError(c, validationResult.errors);
-
+  }
   const organizationsResp = await organizationService.editOrganization(
     db,
     Number(id),
@@ -88,12 +93,13 @@ async function editOrganizationController(c: Context) {
     Number(userID),
   );
 
-  if (organizationsResp.error || !organizationsResp.data)
+  if (organizationsResp.error || !organizationsResp.data) {
     return sendAPIError(c, {
       error: organizationsResp.error || "Failed to edit organization",
       message: organizationsResp.message || "Failed to edit organization",
       status: organizationsResp.status || 500,
     });
+  }
 
   return sendAPIResponse(c, {
     data: organizationsResp.data,

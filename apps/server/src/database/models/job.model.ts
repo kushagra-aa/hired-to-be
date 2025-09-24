@@ -1,5 +1,5 @@
 import { JobStatusEnum } from "@hiredtobe/shared/entities";
-import { relations } from "drizzle-orm";
+import { InferSelectModel, relations } from "drizzle-orm";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 import { baseFields } from "./base.model";
@@ -27,6 +27,8 @@ export const jobModel = sqliteTable("jobs", {
 
   ...baseFields, // Does not Include `id`
 });
+
+export type JobModelType = InferSelectModel<typeof jobModel>;
 
 export const jobRelations = relations(jobModel, ({ one, many }) => ({
   user: one(userModel, {

@@ -26,7 +26,15 @@ export type JobBaseEntity = {
   jdLink: string;
   expectedSalary: number;
   offeredSalary: number;
-  stauts: JobStatusEnum;
+  status: JobStatusEnum;
 };
 
 export type JobEntity = JobBaseEntity & BaseEntity;
+
+export type JobAddPayloadType = JobBaseEntity & {
+  userID: number;
+};
+
+export type JobEditPayloadType = Partial<
+  Omit<JobBaseEntity, "orgID" | "userID">
+>;
