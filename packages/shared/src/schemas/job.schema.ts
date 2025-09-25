@@ -7,7 +7,6 @@ export const JobAddFormSchema = z.object({
   location: z.string().min(3).max(255),
   jdLink: z.url(),
   expectedSalary: z.number().min(0),
-  offeredSalary: z.number().min(0),
   orgID: z.number().min(1),
 });
 
@@ -18,7 +17,6 @@ export const JobEditFormSchema = z.object({
   location: z.string().min(3).max(255).optional(),
   jdLink: z.url().optional(),
   expectedSalary: z.number().min(0).optional(),
-  offeredSalary: z.number().min(0).optional(),
 });
 
 export type JobEditFormType = z.infer<typeof JobEditFormSchema>;

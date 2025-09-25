@@ -1,12 +1,16 @@
-import { relations } from "drizzle-orm";
+import { InferSelectModel, relations } from "drizzle-orm";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 import { baseFields } from "./base.model";
 import { jobModel } from "./job.model";
 import { organizationModel } from "./organization.model";
+import { userModel } from "./user.model";
 
 export const recruiterModel = sqliteTable("recruiters", {
   id: integer("id").primaryKey({ autoIncrement: true }),
+  userID: integer("user_id")
+    .notNull()
+    .references(() => userModel.id, { onDelete: "set null" }),
   jobID: integer("job_id")
     .notNull()
     .references(() => jobModel.id, { onDelete: "set null" }),
@@ -20,8 +24,13 @@ export const recruiterModel = sqliteTable("recruiters", {
 
   ...baseFields, // Does not Include `id`
 });
+export type RecruiterModelType = InferSelectModel<typeof recruiterModel>;
 
 export const recruiterRelations = relations(recruiterModel, ({ one }) => ({
+  user: one(userModel, {
+    fields: [recruiterModel.userID],
+    references: [userModel.id],
+  }),
   job: one(jobModel, {
     fields: [recruiterModel.jobID],
     references: [jobModel.id],

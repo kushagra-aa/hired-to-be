@@ -95,9 +95,19 @@ async function findJobByUserId(
   });
 }
 
-async function findJobByID(db: DbType, id: JobEntity["id"]) {
+async function findJobByID(
+  db: DbType,
+  id: JobEntity["id"],
+  hideInactive?: boolean,
+) {
   return await db.query.jobModel.findFirst({
-    where: (fields, operators) => operators.eq(fields.id, id),
+    where: (fields, operators) =>
+      hideInactive
+        ? operators.and(
+            operators.eq(fields.id, id),
+            operators.eq(fields.isActive, true),
+          )
+        : operators.eq(fields.id, id),
   });
 }
 

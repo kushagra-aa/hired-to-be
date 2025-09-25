@@ -25,7 +25,6 @@ export type JobBaseEntity = {
   location: string;
   jdLink: string;
   expectedSalary: number;
-  offeredSalary: number;
   status: JobStatusEnum;
 };
 
