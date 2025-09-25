@@ -85,6 +85,13 @@
       "when": 1758460268617,
       "tag": "0011_secret_solo",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "6",
+      "when": 1758803792287,
+      "tag": "0012_next_boomerang",
+      "breakpoints": true
     }
   ]
 }

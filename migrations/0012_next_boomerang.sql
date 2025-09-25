@@ -1,0 +1,1 @@
+ALTER TABLE `jobs` DROP COLUMN `offered_salary`;

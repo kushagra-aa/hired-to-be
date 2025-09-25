@@ -20,7 +20,6 @@ export const jobModel = sqliteTable("jobs", {
   location: text("location").notNull(),
   jdLink: text("jd_link").notNull(),
   expectedSalary: integer("expected_salary").notNull(),
-  offeredSalary: integer("offered_salary").notNull(),
   status: text("status")
     .notNull()
     .$defaultFn(() => JobStatusEnum.applied),
