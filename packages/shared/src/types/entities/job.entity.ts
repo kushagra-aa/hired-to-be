@@ -11,13 +11,6 @@ export enum JobStatusEnum {
   withdrawn = "WITHDRAWN",
 }
 
-export type JobDocumentBaseEntity = {
-  jobID: JobEntity["id"];
-  type: string;
-  url: string;
-};
-export type JobDocumentEntity = JobDocumentBaseEntity & BaseEntity;
-
 export type JobBaseEntity = {
   userID: UserEntity["id"];
   orgID: OrganizationEntity["id"];
@@ -37,3 +30,21 @@ export type JobAddPayloadType = JobBaseEntity & {
 export type JobEditPayloadType = Partial<
   Omit<JobBaseEntity, "orgID" | "userID">
 >;
+
+export type JobDocumentBaseEntity = {
+  userID: UserEntity["id"];
+  jobID: JobEntity["id"];
+  type: string;
+  url: string;
+};
+export type JobDocumentEntity = JobDocumentBaseEntity & BaseEntity;
+
+export type JobDocumentAddPayloadType = Omit<
+  JobDocumentBaseEntity,
+  "userID" | "jobID"
+>;
+
+export type JobDocumentEditPayloadType = Partial<
+  Omit<JobDocumentBaseEntity, "jobID" | "userID">
+>;
+export type JobDocumentResponseType = JobDocumentEntity;
