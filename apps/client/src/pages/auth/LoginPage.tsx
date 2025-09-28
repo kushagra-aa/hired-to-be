@@ -23,9 +23,14 @@ export default function LoginPage() {
         {/* Card */}
         <Card className="w-[70%] md:w-[65%] lg:w-[50%] xl:w-[40%] py-10 min-h-[50vh] items-center justify-start gap-0">
           <CardHeader className="w-full flex flex-col items-center gap-4">
-            <CardTitle className="w-max">Login || Signup</CardTitle>
-            <CardDescription className="w-max">
-              Use Google Login
+            <CardTitle className="w-fit text-center text-2xl">
+              Authenticate
+            </CardTitle>
+            <CardDescription className="w-fit text-center">
+              <span className="font-bold">Welcome!</span>,
+              <br />
+              Let's Start by <span className="font-bold">Connecting</span> with
+              your <span className="font-bold">Google Account</span>
             </CardDescription>
           </CardHeader>
           <CardContent className="w-full h-full flex-1 flex items-center justify-center">
