@@ -15,8 +15,11 @@ import { ProtectedRoute } from "./ProtectedRoute";
 
 // Lazy load pages
 const LoginPage = lazy(() => import("@/client/pages/auth/LoginPage"));
-const HomePage = lazy(() => import("@/client/pages/HomePage"));
-const TodosPage = lazy(() => import("@/client/pages/protected/TodosPage"));
+const JobsPage = lazy(() => import("@/client/pages/protected/JobsPage"));
+const JobPage = lazy(() => import("@/client/pages/protected/JobPage"));
+const OrganizationsPage = lazy(
+  () => import("@/client/pages/protected/OrganizationsPage"),
+);
 const NotFoundPage = lazy(() => import("@/client/pages/NotFoundPage"));
 
 const routes: RouteObject[] = [
@@ -25,30 +28,11 @@ const routes: RouteObject[] = [
     errorElement: <PageError />,
     children: [
       {
-        path: "/",
-        element: (
-          <Suspense fallback={<PageLoader />}>
-            <HomePage />
-          </Suspense>
-        ),
-        errorElement: <PageError />,
-      },
-      {
-        path: "/organizations",
-        element: (
-          <ProtectedRoute roles={[UserRoleEnum.user]}>
-            <Suspense fallback={<PageLoader />}>
-              <TodosPage />
-            </Suspense>
-          </ProtectedRoute>
-        ),
-      },
-      {
         path: "/jobs",
         element: (
           <ProtectedRoute roles={[UserRoleEnum.user]}>
             <Suspense fallback={<PageLoader />}>
-              <TodosPage />
+              <JobsPage />
             </Suspense>
           </ProtectedRoute>
         ),
@@ -58,7 +42,17 @@ const routes: RouteObject[] = [
         element: (
           <ProtectedRoute roles={[UserRoleEnum.user]}>
             <Suspense fallback={<PageLoader />}>
-              <TodosPage />
+              <JobPage />
+            </Suspense>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/organizations",
+        element: (
+          <ProtectedRoute roles={[UserRoleEnum.user]}>
+            <Suspense fallback={<PageLoader />}>
+              <OrganizationsPage />
             </Suspense>
           </ProtectedRoute>
         ),
@@ -95,7 +89,7 @@ export const router = createBrowserRouter(routes);
 // Can Configure User's Landing pages based on Roles
 export const USER_LANDING_PAGES: Record<UserRoleEnum, string> = {
   ADMIN: "/admin",
-  USER: "/todos",
+  USER: "/jobs",
 };
 
 export default function AppRouter() {

@@ -42,7 +42,7 @@ export function NavBar() {
   return (
     <NavigationMenu className="max-w-full py-4" viewport={false}>
       <NavigationMenuList className="gap-4 flex-1 w-full">
-        <NavItem className="text-2xl" to="/">
+        <NavItem className="text-2xl" to="/" as="anchor">
           Home
         </NavItem>
         {isAuthenticated && user?.role === "USER" && (
