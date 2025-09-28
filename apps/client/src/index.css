@@ -29,7 +29,7 @@
   /* Tailwind Variables */
   --background: var(--pro-color-foreground);
   --foreground: var(--pro-color-background);
-  --card: oklch(0% 0 0deg);
+  --card: oklch(90.826% 0.0022 14.553deg);
   --card-foreground: var(--pro-color-background);
   --popover: oklch(0% 0 0deg);
   --popover-foreground: var(--pro-color-foreground);
@@ -38,7 +38,7 @@
   --secondary: var(--pro-color-secondary);
   --secondary-foreground: var(--pro-color-foreground);
   --muted: oklch(26.9% 0 0deg);
-  --muted-foreground: oklch(70.8% 0 0deg);
+  --muted-foreground: oklch(49.97% 0.0001 271.152deg);
   --accent: var(--pro-color-accent);
   --accent-foreground: var(--pro-color-foreground);
   --destructive: var(--pro-color-danger);
@@ -89,7 +89,7 @@
   --background: var(--pro-color-background);
   --foreground: var(--pro-color-foreground);
   --card: oklch(0% 0 0deg);
-  --card-foreground: oklch(97% 0 0deg);
+  --card-foreground: var(--pro-color-foreground);
   --popover: oklch(0% 0 0deg);
   --popover-foreground: oklch(97% 0 0deg);
   --primary: var(--pro-color-primary);
@@ -216,6 +216,10 @@ body {
 #root {
   margin: 0 auto;
   max-width: 1000px;
+}
+
+.no_underline {
+  text-decoration-line: none;
 }
 
 /* 3) Base layer to ensure body picks background/foreground */
