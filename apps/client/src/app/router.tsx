@@ -8,7 +8,6 @@ import {
 
 import { PageError } from "@/client/components/feedback/PageError";
 import { PageLoader } from "@/client/components/feedback/PageLoader";
-import { AdminLayout } from "@/client/layouts/AdminLayout";
 import { AuthLayout } from "@/client/layouts/AuthLayout";
 import { MainLayout } from "@/client/layouts/MainLayout";
 
@@ -16,12 +15,8 @@ import { ProtectedRoute } from "./ProtectedRoute";
 
 // Lazy load pages
 const LoginPage = lazy(() => import("@/client/pages/auth/LoginPage"));
-const RegisterPage = lazy(() => import("@/client/pages/auth/RegisterPage"));
 const HomePage = lazy(() => import("@/client/pages/HomePage"));
 const TodosPage = lazy(() => import("@/client/pages/protected/TodosPage"));
-const AdminDashboardPage = lazy(
-  () => import("@/client/pages/protected/admin/AdminDashboardPage"),
-);
 const NotFoundPage = lazy(() => import("@/client/pages/NotFoundPage"));
 
 const routes: RouteObject[] = [
@@ -39,7 +34,7 @@ const routes: RouteObject[] = [
         errorElement: <PageError />,
       },
       {
-        path: "/todos",
+        path: "/organizations",
         element: (
           <ProtectedRoute roles={[UserRoleEnum.user]}>
             <Suspense fallback={<PageLoader />}>
@@ -49,20 +44,24 @@ const routes: RouteObject[] = [
         ),
       },
       {
-        element: <AdminLayout />,
-        errorElement: <PageError />,
-        children: [
-          {
-            path: "/admin",
-            element: (
-              <ProtectedRoute roles={[UserRoleEnum.admin]}>
-                <Suspense fallback={<PageLoader />}>
-                  <AdminDashboardPage />
-                </Suspense>
-              </ProtectedRoute>
-            ),
-          },
-        ],
+        path: "/jobs",
+        element: (
+          <ProtectedRoute roles={[UserRoleEnum.user]}>
+            <Suspense fallback={<PageLoader />}>
+              <TodosPage />
+            </Suspense>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/jobs/:id",
+        element: (
+          <ProtectedRoute roles={[UserRoleEnum.user]}>
+            <Suspense fallback={<PageLoader />}>
+              <TodosPage />
+            </Suspense>
+          </ProtectedRoute>
+        ),
       },
     ],
   },
@@ -75,15 +74,6 @@ const routes: RouteObject[] = [
         element: (
           <Suspense fallback={<PageLoader />}>
             <LoginPage />
-          </Suspense>
-        ),
-        errorElement: <PageError />,
-      },
-      {
-        path: "/register",
-        element: (
-          <Suspense fallback={<PageLoader />}>
-            <RegisterPage />
           </Suspense>
         ),
         errorElement: <PageError />,

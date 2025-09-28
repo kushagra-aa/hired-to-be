@@ -1,21 +1,5 @@
-.nav {
-  border-bottom: 1px solid var(--color-text);
-  display: grid;
-  gap: 1rem;
-  grid-auto-flow: column;
-  grid-template-columns: repeat(auto-fill, 10%);
-  padding: 1rem;
-  place-items: center flex-start;
-  width: 100%;
-}
-
 .nav_item {
-  color: var(--color-text);
-  font-size: 1.5rem;
-
-  &.nav_home {
-    font-weight: bold;
-  }
+  font-size: var(--text-xl);
 
   &.active {
     color: var(--color-primary);
@@ -24,18 +8,23 @@
   }
 }
 
-.nav_text {
+.nav_actions {
   display: flex;
-  font-size: 1.2rem;
-  grid-column: -5/-2;
+  gap: 1rem;
   justify-content: flex-end;
   width: 100%;
 }
 
+.nav_text {
+  display: flex;
+  grid-column: -5/-2;
+  justify-content: flex-end;
+  width: max-content;
+}
+
 .nav_logout {
   display: flex;
-  font-size: 1.2rem;
   grid-column: -2/-1;
   justify-content: flex-end;
-  width: 100%;
+  width: max-content;
 }

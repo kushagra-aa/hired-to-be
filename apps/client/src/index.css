@@ -213,6 +213,11 @@ body {
   letter-spacing: var(--tracking-normal);
 }
 
+#root {
+  margin: 0 auto;
+  max-width: 1000px;
+}
+
 /* 3) Base layer to ensure body picks background/foreground */
 @layer base {
   * {

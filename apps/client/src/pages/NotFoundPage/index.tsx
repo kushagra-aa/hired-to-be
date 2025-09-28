@@ -11,7 +11,7 @@ export default function NotFoundPage() {
     <div className={styles.container}>
       <h1 className={styles.title}>404</h1>
       <p className={styles.message}>Page not found</p>
-      <UIButton onClick={() => navigate("/")}>Go Home</UIButton>
+      <UIButton onClick={() => navigate(-1)}>Go Back</UIButton>
     </div>
   );
 }
