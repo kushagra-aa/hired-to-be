@@ -1,69 +1,120 @@
-# React + TypeScript + Vite
+# Hired To Be
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-stack monorepo built on **Hono**, **ReactJS**, **Vite**, **Cloudflare Workers**, **Drizzle ORM**, and powered by **Cloudflare D1**.
 
-Currently, two official plugins are available:
+## 🚀 Getting Started
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Follow these steps to set up and run the project locally on your Ubuntu system.
 
-## Expanding the ESLint configuration
+### Prerequisites
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+You will need the following installed:
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+* **Node.js** (v20+ recommended)
+* **pnpm** (as indicated by `pnpm-workspace.yaml`)
+* **Wrangler CLI** (Cloudflare's command-line tool, used for D1 local development)
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+### Installation
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+1. **Clone the Repository**
+
+    ```bash
+    git clone https://github.com/kushagra-aa/hired-to-be.git
+    cd hired-to-be
+    ```
+
+2. **Install Dependencies**
+    Use pnpm to install all dependencies across the monorepo:
+
+    ```bash
+    pnpm install
+    ```
+
+3. **Configure Environment Variables**
+    Create a local environment file by copying the example:
+
+    ```bash
+    cp .dev.vars.example .dev.vars
+    ```
+
+    Populate the variables in the newly created `.dev.vars` file. This file is used by `wrangler dev` for local development.
+
+## 🗄️ Database Setup (Cloudflare D1 & Drizzle)
+
+The Cloudflare D1 database is emulated locally using a SQLite file managed by Wrangler/Miniflare. Drizzle ORM is used for schema and migrations.
+
+### 1\. Run Migrations
+
+To set up your local database schema, apply all Drizzle migrations using the `wrangler` command with the `--local` flag.
+
+```bash
+pnpm db:migrate:local
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+| Script Command | Description |
+| :--- | :--- |
+| `pnpm db:generate` | Generates a new Drizzle migration file from your schema. |
+| `pnpm db:migrate:dev` | Applies pending migrations to the **local dev** D1 instance. |
+| `pnpm db:migrate:remote` | Applies pending migrations to the **remote (production)** D1 instance. *(Requires Cloudflare login)* |
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 🛠️ Local Development
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Server
+
+To run the Hono application locally and connect to the mock D1 database:
+
+```bash
+pnpm dev:server
 ```
+
+This command runs `wrangler dev`, which:
+
+1. Starts a local backaned server (usually on `http://localhost:8000`).
+2. Loads your environment variables from `.dev.vars`.
+3. Initializes the local D1 SQLite database from the `.wrangler/` state folder.
+
+### Client
+
+To run the React application locally and connect to the local server:
+
+```bash
+pnpm dev:client
+```
+
+This command runs `vite`, which:
+
+1. Starts a local frontend server (usually on `http://localhost:3000`).
+2. Connects to the dev backend using proxy (usually on `http://localhost:3000/api`).
+
+## 📦 Monorepo Structure
+
+The project is structured as a pnpm workspace with a focus on separate application and shared package logic.
+
+```
+.
+├── apps/
+│   ├── client/                 # Frontend application (React Vite)
+│   └── server/                 # Hono API (Cloudflare Worker)
+│       └── src/                # Core server logic, routes, and controllers
+│       └──drizzle.config.ts    # Drizzle configuration for schema and migrations
+├── packages/                   # Shared packages (e.g., Types, utility functions)
+├── migrations/                 # Drizzle migraetion files
+└── wrangler.toml               # Cloudflare Worker and D1 binding configuration
+```
+
+## 🌐 Deployment
+
+To deploy the application to Cloudflare Workers:
+
+1. Ensure your `wrangler.toml` has the correct `database_id` and `database_name` for your remote D1 instance.
+2. Deploy the code:
+
+    ```bash
+    pnpm deploy
+    ```
+
+3. If you have new migrations, apply them to the remote database:
+
+    ```bash
+    pnpm db:migrate:remote
+    ```
