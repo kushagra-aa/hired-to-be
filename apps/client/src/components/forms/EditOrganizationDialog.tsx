@@ -1,9 +1,11 @@
 import { ApiError } from "@hiredtobe/shared/api";
+import { OrganizationEntity } from "@hiredtobe/shared/entities";
 import {
-  OrganizationAddFormSchema,
-  OrganizationAddFormType,
+  OrganizationEditFormSchema,
+  OrganizationEditFormType,
 } from "@hiredtobe/shared/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -15,32 +17,41 @@ import {
   UIInputField,
 } from "@/client/components/ui/InputField";
 import Loader from "@/client/components/ui/Loader";
-import { useAddOrganization } from "@/client/hooks/useOrganizations";
+import { useUpdateOrganization } from "@/client/hooks/useOrganizations";
 import { Form } from "@/client/shadcn/components/ui/form";
-import { useAuth } from "@/client/stores/auth.store";
 
-function AddOrganizationDialog() {
-  const { user } = useAuth();
-
-  const form = useForm<OrganizationAddFormType>({
-    resolver: zodResolver(OrganizationAddFormSchema),
+function EditOrganizationDialog({
+  organization,
+  onOpenChange,
+  open,
+}: {
+  organization: OrganizationEntity | null;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
+  const form = useForm<OrganizationEditFormType>({
+    resolver: zodResolver(OrganizationEditFormSchema),
   });
 
-  const submit = useAddOrganization();
+  const submit = useUpdateOrganization();
 
-  const handleFormSubmit = (data: OrganizationAddFormType) => {
+  const handleFormSubmit = (data: OrganizationEditFormType) => {
+    if (!organization) return;
     submit.mutate(
       {
-        name: data.name,
-        website: data.website,
-        linkedIn: data.linkedIn,
-        careersURL: data.careersURL,
-        logoURL: data.logoURL,
-        userID: user!.id,
+        id: organization.id,
+        data: {
+          name: data.name,
+          website: data.website,
+          linkedIn: data.linkedIn,
+          careersURL: data.careersURL,
+          logoURL: data.logoURL,
+        },
       },
       {
         onSuccess: async () => {
-          toast.success("Org Added successfully");
+          toast.success("Org Edited successfully");
+          onOpenChange(false);
         },
         onError: (err: ApiError) => {
           const errors = err.data?.errors || [];
@@ -58,11 +69,27 @@ function AddOrganizationDialog() {
     );
   };
 
+  useEffect(() => {
+    if (organization) {
+      form.reset({
+        name: organization.name,
+        website: organization.website || undefined,
+        linkedIn: organization.linkedIn || undefined,
+        careersURL: organization.careersURL || undefined,
+        logoURL: organization.logoURL || undefined,
+      });
+    }
+  }, [organization, form]);
+
+  if (!organization) return;
+
   return (
     <UIDrawer
-      title="Add New Organization"
+      open={open}
+      onOpenChange={onOpenChange}
+      title="Edit New Organization"
       description="Enter Organization Details"
-      trigger={<UIButton variant="outline">Add Organization</UIButton>}
+      trigger={<UIButton variant="outline">Edit Organization</UIButton>}
       closeButton={
         <UIButton className="mt-4 mb-10" variant="outline">
           Cancel
@@ -129,4 +156,4 @@ function AddOrganizationDialog() {
   );
 }
 
-export default AddOrganizationDialog;
+export default EditOrganizationDialog;

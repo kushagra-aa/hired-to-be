@@ -31,15 +31,19 @@ export type SuccessResponseType<T = unknown> =
   | (BaseResponseType & {
       data: T;
       pagination: PaginationResponseType;
+      cursorPagination: undefined;
       error?: undefined;
     })
   | (BaseResponseType & {
       data: T;
+      pagination: undefined;
       cursorPagination: CursorPaginationResponseType;
       error?: undefined;
     })
   | (BaseResponseType & {
       data: T;
+      cursorPagination: undefined;
+      pagination: undefined;
       error?: undefined; // still allow no pagination
     });
 

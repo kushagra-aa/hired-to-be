@@ -3,6 +3,7 @@ import { getInitials } from "@hiredtobe/shared/utils";
 import { Briefcase, Globe, Linkedin, Pencil, Trash2 } from "lucide-react";
 
 import UIButton from "@/client/components/ui/Button";
+import Loader from "@/client/components/ui/Loader";
 import {
   Avatar,
   AvatarFallback,
@@ -18,15 +19,25 @@ import {
 function OrganizationCard({
   organization,
   handleDeleteClick,
+  handleEditClick,
+  isLoading,
 }: {
   organization: OrganizationEntity;
   handleDeleteClick: (id: number) => Promise<void>;
+  handleEditClick: (org: OrganizationEntity) => Promise<void>;
+  isLoading?: boolean;
 }) {
   return (
     <Card
       key={organization.id}
-      className="hover:shadow-lg transition-shadow duration-200"
+      className="hover:shadow-lg transition-shadow duration-200 relative"
+      data-loading={isLoading}
     >
+      {isLoading && (
+        <div className="absolute flex items-center justify-center h-full w-full">
+          <Loader variant="clip" />
+        </div>
+      )}
       <CardHeader className="pb-4">
         <div className="flex items-center gap-4">
           <Avatar className="h-16 w-16">
@@ -39,7 +50,7 @@ function OrganizationCard({
             </AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-lg truncate">
+            <h3 className="font-semibold text-lg wrap-break-word">
               {organization.name}
             </h3>
           </div>
@@ -95,7 +106,8 @@ function OrganizationCard({
           variant="outline"
           size="sm"
           className="flex-1"
-          //   onClick={() => handleEditClick(organization)}
+          disabled={isLoading}
+          onClick={() => handleEditClick(organization)}
         >
           <Pencil className="h-4 w-4 mr-2" />
           Edit
@@ -104,6 +116,7 @@ function OrganizationCard({
           variant="destructive"
           size="sm"
           className="flex-1"
+          disabled={isLoading}
           onClick={() => handleDeleteClick(organization.id)}
         >
           <Trash2 className="h-4 w-4 mr-2" />

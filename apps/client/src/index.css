@@ -228,6 +228,14 @@ label[data-required="true"]::after {
   margin-left: 2px;
 }
 
+div[data-loading="true"]::after {
+  background: #0000004b;
+  content: "";
+  height: 100%;
+  position: absolute;
+  width: 100%
+}
+
 /* 3) Base layer to ensure body picks background/foreground */
 @layer base {
   * {

@@ -8,10 +8,12 @@ import { SuccessResponseType } from "@hiredtobe/shared/types";
 
 const client = new APIClient("/api/organizations");
 
-export async function getOrganizationsAPI(): Promise<
-  SuccessResponseType<OrganizationEntity[]>
-> {
-  const resp = await client.get<OrganizationEntity[]>("");
+export async function getOrganizationsAPI(
+  cursor: number | null,
+): Promise<SuccessResponseType<OrganizationEntity[]>> {
+  const resp = await client.get<OrganizationEntity[]>(
+    `?${cursor ? `?cursor=${cursor}` : ""}`,
+  );
   return resp;
 }
 

@@ -35,7 +35,7 @@ function UIDrawer({
   footerActions?: React.ReactNode[];
 } & React.ComponentProps<typeof Drawer>) {
   return (
-    <Drawer {...props}>
+    <Drawer snapPoints={[1, 1.2]} activeSnapPoint={1} {...props}>
       <UIDrawerTrigger>{trigger}</UIDrawerTrigger>
       <DrawerContent>
         <DrawerHeader>

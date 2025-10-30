@@ -3,6 +3,7 @@ import {
   OrganizationEditPayloadType,
   OrganizationEntity,
 } from "@hiredtobe/shared/entities";
+import { SuccessResponseType } from "@hiredtobe/shared/types";
 
 import {
   addOrganizationAPI,
@@ -13,17 +14,28 @@ import {
 import { appQueryClient } from "@/client/lib/query-client";
 import { useAuth } from "@/client/stores/auth.store";
 
-import { useAppMutation, useAppQuery } from "./useAppQuery";
+import { useAppInfiniteQuery, useAppMutation } from "./useAppQuery";
 
 // Query Keys
-const TODOS_KEY = (userId?: number) => ["todos", userId];
+const ORGANIZATION_KEY = (userId?: number) => ["organizations", userId];
 
 // Fetch Organizations
 export function useOrganizations() {
   const { user } = useAuth();
-  return useAppQuery<OrganizationEntity[], ReturnType<typeof TODOS_KEY>>({
-    queryKey: TODOS_KEY(user?.id),
-    queryFn: getOrganizationsAPI,
+  return useAppInfiniteQuery<
+    SuccessResponseType<OrganizationEntity[]>,
+    ReturnType<typeof ORGANIZATION_KEY>
+  >({
+    queryKey: ORGANIZATION_KEY(user?.id),
+    queryFn: ({ pageParam }) => getOrganizationsAPI(pageParam),
+    initialPageParam: null,
+    getNextPageParam: (lastPage) => {
+      // Return nextCursor if hasMore is true, otherwise undefined
+      return lastPage?.cursorPagination?.hasMore
+        ? lastPage?.cursorPagination.nextCursor
+        : undefined;
+    },
+    enabled: !!user?.id,
   });
 }
 
@@ -42,7 +54,9 @@ export function useAddOrganization() {
       );
     },
     onSuccess: () => {
-      void appQueryClient.invalidateQueries({ queryKey: TODOS_KEY(user?.id) });
+      void appQueryClient.invalidateQueries({
+        queryKey: ORGANIZATION_KEY(user?.id),
+      });
     },
   });
 }
@@ -66,7 +80,9 @@ export function useUpdateOrganization() {
       return editOrganizationAPI(id, { ...data });
     },
     onSuccess: () => {
-      void appQueryClient.invalidateQueries({ queryKey: TODOS_KEY(user?.id) });
+      void appQueryClient.invalidateQueries({
+        queryKey: ORGANIZATION_KEY(user?.id),
+      });
     },
   });
 }
@@ -84,7 +100,9 @@ export function useDeleteOrganization() {
       return deleteOrganizationAPI(id); // pass user_id for ownership check
     },
     onSuccess: () => {
-      void appQueryClient.invalidateQueries({ queryKey: TODOS_KEY(user?.id) });
+      void appQueryClient.invalidateQueries({
+        queryKey: ORGANIZATION_KEY(user?.id),
+      });
     },
   });
 }

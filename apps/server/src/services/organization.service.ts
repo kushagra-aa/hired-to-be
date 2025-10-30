@@ -72,7 +72,7 @@ async function editOrganizationService(
       message: "No Organization Found with this ID",
       status: 404,
     };
-  if (payload.name) {
+  if (payload.name && org.name !== payload.name) {
     const exisiting =
       await organizationRepository.findOrganizationByNameAndUserID(
         db,
