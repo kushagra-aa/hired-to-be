@@ -28,7 +28,7 @@ function UIDrawer({
   footerActions,
   ...props
 }: {
-  trigger: React.JSX.Element;
+  trigger: React.ReactNode;
   closeButton: React.ReactNode;
   title: React.ReactNode;
   description?: React.ReactNode;
@@ -43,7 +43,7 @@ function UIDrawer({
           {description && <DrawerDescription>{description}</DrawerDescription>}
         </DrawerHeader>
         {children}
-        <DrawerFooter>
+        <DrawerFooter className="flex flex-row items-center justify-center gap-4">
           {footerActions?.map((action) => action)}
           <DrawerClose>{closeButton}</DrawerClose>
         </DrawerFooter>

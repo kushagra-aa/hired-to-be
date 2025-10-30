@@ -1,4 +1,4 @@
-import { OrigamiIcon } from "lucide-react";
+import { FolderOpenIcon } from "lucide-react";
 
 import {
   Empty,
@@ -22,7 +22,7 @@ export function UIEmpty({
     <Empty>
       <EmptyHeader>
         <EmptyMedia variant="icon">
-          <OrigamiIcon />
+          <FolderOpenIcon color="var(--color-secondary)" />
         </EmptyMedia>
         <EmptyTitle>{title}</EmptyTitle>
         <EmptyDescription>{description}</EmptyDescription>

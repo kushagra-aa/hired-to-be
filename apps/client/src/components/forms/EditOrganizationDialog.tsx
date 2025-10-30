@@ -89,7 +89,7 @@ function EditOrganizationDialog({
       onOpenChange={onOpenChange}
       title="Edit New Organization"
       description="Enter Organization Details"
-      trigger={<UIButton variant="outline">Edit Organization</UIButton>}
+      trigger={null}
       closeButton={
         <UIButton className="mt-4 mb-10" variant="outline">
           Cancel

@@ -23,7 +23,7 @@ function OrganizationCard({
   isLoading,
 }: {
   organization: OrganizationEntity;
-  handleDeleteClick: (id: number) => Promise<void>;
+  handleDeleteClick: (org: OrganizationEntity) => Promise<void>;
   handleEditClick: (org: OrganizationEntity) => Promise<void>;
   isLoading?: boolean;
 }) {
@@ -57,7 +57,7 @@ function OrganizationCard({
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-2">
+      <CardContent className="space-y-2 h-full">
         {organization.website && (
           <a
             href={organization.website}
@@ -117,7 +117,7 @@ function OrganizationCard({
           size="sm"
           className="flex-1"
           disabled={isLoading}
-          onClick={() => handleDeleteClick(organization.id)}
+          onClick={() => handleDeleteClick(organization)}
         >
           <Trash2 className="h-4 w-4 mr-2" />
           Delete

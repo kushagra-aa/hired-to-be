@@ -1,6 +1,7 @@
 import { OrganizationEntity } from "@hiredtobe/shared/entities";
 import { useState } from "react";
 
+import ConfirmDialog from "@/client/components/ConfirmDialog";
 import AddOrganizationDialog from "@/client/components/forms/AddOrganizationDialog";
 import EditOrganizationDialog from "@/client/components/forms/EditOrganizationDialog";
 import UIButton from "@/client/components/ui/Button";
@@ -16,6 +17,9 @@ import OrganizationCard from "./OrganizationCard";
 export default function OrganizationsPage() {
   const [selectedOrganization, setSelectedOrganization] =
     useState<OrganizationEntity | null>(null);
+  const [dialogState, setDialogState] = useState<null | "eidt" | "delete">(
+    null,
+  );
 
   const { data, isPending, fetchNextPage, isFetchingNextPage, hasNextPage } =
     useOrganizations();
@@ -23,19 +27,36 @@ export default function OrganizationsPage() {
 
   const organizations = data?.pages.flatMap((page) => page.data) ?? [];
 
-  const handleDeleteClick = async (id: number) => {
+  const handleDelete = async (id: number) => {
+    setDialogState(null);
+    setSelectedOrganization(null);
     await del.mutate(id);
   };
+  const handleDeleteClick = async (org: OrganizationEntity) => {
+    setDialogState("delete");
+    setSelectedOrganization(org);
+  };
   const handleEditClick = async (org: OrganizationEntity) => {
+    setDialogState("eidt");
     setSelectedOrganization(org);
   };
 
   return (
     <div>
       <EditOrganizationDialog
-        open={!!selectedOrganization}
+        open={dialogState === "eidt" && !!selectedOrganization}
         onOpenChange={(open) => (!open ? setSelectedOrganization(null) : null)}
         organization={selectedOrganization}
+      />
+      <ConfirmDialog
+        title="Are You Sure?"
+        description="Do you want to delete this Organization"
+        open={dialogState === "delete" && !!selectedOrganization}
+        onOpenChange={(open) => (!open ? setSelectedOrganization(null) : null)}
+        handleSubmit={() =>
+          selectedOrganization && handleDelete(selectedOrganization.id)
+        }
+        isLoading={del.isPending}
       />
       {/* Install and Add An Modal Component */}
       <div className="flex justify-between">
