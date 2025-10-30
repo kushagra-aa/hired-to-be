@@ -31,7 +31,10 @@ const NavItemLink = (props: NavLinkProps & { as?: "anchor" }) =>
 const NavItem = (props: NavLinkProps & { as?: "anchor" }) => (
   <NavigationMenuItem>
     <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-      <NavItemLink {...props} />
+      <NavItemLink
+        {...props}
+        className={`text-sm! sm:text-xl! mx-0! ${props.className}`}
+      />
     </NavigationMenuLink>
   </NavigationMenuItem>
 );
@@ -42,9 +45,9 @@ export function NavBar() {
   return (
     <NavigationMenu className="max-w-full py-4" viewport={false}>
       <NavigationMenuList className="gap-4 flex-1 w-full">
-        <NavItem className="text-2xl" to="/" as="anchor">
+        {/* <NavItem to="/" as="anchor">
           Home
-        </NavItem>
+        </NavItem> */}
         {isAuthenticated && user?.role === "USER" && (
           <>
             <NavItem to="/jobs">Jobs</NavItem>

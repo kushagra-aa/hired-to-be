@@ -59,8 +59,8 @@ export default function OrganizationsPage() {
         isLoading={del.isPending}
       />
       {/* Install and Add An Modal Component */}
-      <div className="flex justify-between">
-        <h1 className="text-2xl">Organizations</h1>
+      <div className="flex gap-4 sm:justify-between flex-col sm:flex-row">
+        <h1 className="text-2xl text-center">Organizations</h1>
         <AddOrganizationDialog />
       </div>
       <div className="py-4">

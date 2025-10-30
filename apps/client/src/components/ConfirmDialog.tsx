@@ -25,6 +25,7 @@ function ConfirmDialog({
       open={open}
       onOpenChange={onOpenChange}
       trigger={null}
+      contentClassName="h-[30vh] sm:h-[22vh]"
       footerActions={[
         <UIButton variant="outline" onClick={handleSubmit} disabled={isLoading}>
           {isLoading ? <Loader variant="clip" /> : "Confirm"}
@@ -35,7 +36,7 @@ function ConfirmDialog({
           Cancel
         </UIButton>
       }
-    ></UIDrawer>
+    />
   );
 }
 
