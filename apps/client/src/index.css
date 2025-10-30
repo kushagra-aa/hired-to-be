@@ -222,6 +222,12 @@ body {
   text-decoration-line: none;
 }
 
+label[data-required="true"]::after {
+  color: red;
+  content: " *";
+  margin-left: 2px;
+}
+
 /* 3) Base layer to ensure body picks background/foreground */
 @layer base {
   * {

@@ -29,6 +29,7 @@ type CommonPropsType = {
   errorClassName?: string;
   hintClassName?: string;
   iconClassName?: string;
+  required?: boolean;
 };
 
 export type FormControlType = Control<FieldValues, any, FieldValues>;
@@ -76,6 +77,7 @@ export function UIInputField({
   errorClassName,
   hintClassName,
   placeholder,
+  required,
 }: InputFieldPropsType) {
   return (
     <FormField
@@ -83,7 +85,9 @@ export function UIInputField({
       control={control}
       render={({ field }) => (
         <FormItem className={`${className}`}>
-          <FormLabel className={`${labelClassName}`}>{label}</FormLabel>
+          <FormLabel className={`${labelClassName}`} data-required={required}>
+            {label}
+          </FormLabel>
           <FormControl>
             {as === "password" ? (
               <PasswordInput field={field} placeholder={placeholder} />
@@ -92,6 +96,7 @@ export function UIInputField({
                 className={`${inputClassName}`}
                 placeholder={placeholder}
                 type={type}
+                required={required}
                 {...field}
               />
             )}
