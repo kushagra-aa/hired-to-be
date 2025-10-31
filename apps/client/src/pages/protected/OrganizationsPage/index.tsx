@@ -1,8 +1,8 @@
 import { OrganizationEntity } from "@hiredtobe/shared/entities";
 
 import ConfirmDialog from "@/client/components/ConfirmDialog";
-import AddOrganizationDialog from "@/client/components/dialogs/AddOrganizationDialog";
-import EditOrganizationDialog from "@/client/components/dialogs/EditOrganizationDialog";
+import AddOrganizationDialog from "@/client/components/dialogs/organization/AddOrganizationDialog";
+import EditOrganizationDialog from "@/client/components/dialogs/organization/EditOrganizationDialog";
 import UIButton from "@/client/components/ui/Button";
 import { UIEmpty } from "@/client/components/ui/Empty";
 import Loader from "@/client/components/ui/Loader";
