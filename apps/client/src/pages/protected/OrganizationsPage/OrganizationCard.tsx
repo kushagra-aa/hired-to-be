@@ -39,6 +39,10 @@ function OrganizationCard({
         </div>
       )}
       <CardHeader className="pb-4">
+        {/* <Link
+          to={`organizations/${organization.id}`}
+          className="underline underline-offset-4"
+        > */}
         <div className="flex items-center gap-4">
           <Avatar className="h-16 w-16">
             <AvatarImage
@@ -55,6 +59,7 @@ function OrganizationCard({
             </h3>
           </div>
         </div>
+        {/* </Link> */}
       </CardHeader>
 
       <CardContent className="space-y-2 h-full">

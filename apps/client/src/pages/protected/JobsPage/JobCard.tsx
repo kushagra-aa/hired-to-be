@@ -3,7 +3,8 @@ import {
   JobFullEntity,
   JobStatusEnum,
 } from "@hiredtobe/shared/entities";
-import { Briefcase, Pencil, Trash2 } from "lucide-react";
+import { Briefcase, EyeIcon, Pencil, Trash2 } from "lucide-react";
+import { Link } from "react-router";
 
 import UIButton from "@/client/components/ui/Button";
 import Loader from "@/client/components/ui/Loader";
@@ -106,6 +107,18 @@ function JobCard({
       </CardContent>
 
       <CardFooter className="flex gap-2 pt-4">
+        <Link to={`/jobs/${job.id}`} className="flex-1">
+          <UIButton
+            variant="outline"
+            size="sm"
+            className="w-full"
+            title="See all the detials saved for this job"
+            disabled={isLoading}
+          >
+            <EyeIcon className="h-4 w-4 mr-2" />
+            View
+          </UIButton>
+        </Link>
         <UIButton
           variant="outline"
           size="sm"
