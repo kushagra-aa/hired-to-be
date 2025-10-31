@@ -35,6 +35,14 @@ export async function editJobAPI(
   return resp;
 }
 
+export async function editJobStatusAPI(
+  id: JobEntity["id"],
+  payload: { status: JobEntity["status"] },
+): Promise<SuccessResponseType<JobEntity>> {
+  const resp = await client.patch<JobEntity>(`/${id}/status`, payload);
+  return resp;
+}
+
 export async function deleteJobAPI(
   id: JobEntity["id"],
 ): Promise<SuccessResponseType<JobEntity>> {

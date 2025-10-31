@@ -10,6 +10,7 @@ import {
   addJobAPI,
   deleteJobAPI,
   editJobAPI,
+  editJobStatusAPI,
   getJobsAPI,
 } from "@/client/lib/api/jobs.api";
 import { appQueryClient } from "@/client/lib/query-client";
@@ -79,6 +80,32 @@ export function useUpdateJob() {
     }) => {
       if (!user) throw new Error("User not authenticated");
       return editJobAPI(id, { ...data });
+    },
+    onSuccess: () => {
+      void appQueryClient.invalidateQueries({
+        queryKey: JOB_KEY(user?.id),
+      });
+    },
+  });
+}
+
+// Update JobStatus
+export function useUpdateJobStatus() {
+  const { user } = useAuth();
+
+  return useAppMutation<
+    JobEntity, // success type
+    { id: number; status: JobEntity["status"] } // variables type (title)
+  >({
+    mutationFn: async ({
+      id,
+      status,
+    }: {
+      id: number;
+      status: JobEntity["status"];
+    }) => {
+      if (!user) throw new Error("User not authenticated");
+      return editJobStatusAPI(id, { status });
     },
     onSuccess: () => {
       void appQueryClient.invalidateQueries({

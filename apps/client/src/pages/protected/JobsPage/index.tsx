@@ -1,4 +1,4 @@
-import { JobFullEntity } from "@hiredtobe/shared/entities";
+import { JobEntity, JobFullEntity } from "@hiredtobe/shared/entities";
 
 import ConfirmDialog from "@/client/components/ConfirmDialog";
 import AddJobDialog from "@/client/components/dialogs/job/AddJobDialog";
@@ -6,7 +6,11 @@ import EditJobDialog from "@/client/components/dialogs/job/EditJobDialog";
 import UIButton from "@/client/components/ui/Button";
 import { UIEmpty } from "@/client/components/ui/Empty";
 import Loader from "@/client/components/ui/Loader";
-import { useDeleteJob, useJobs } from "@/client/hooks/useJobs";
+import {
+  useDeleteJob,
+  useJobs,
+  useUpdateJobStatus,
+} from "@/client/hooks/useJobs";
 import { useModalManager } from "@/client/hooks/useModalManager";
 
 import JobCard from "./JobCard";
@@ -21,6 +25,7 @@ export default function JobsPage() {
   const { data, isPending, fetchNextPage, isFetchingNextPage, hasNextPage } =
     useJobs();
   const del = useDeleteJob();
+  const updateStatus = useUpdateJobStatus();
 
   const jobs = data?.pages.flatMap((page) => page.data) ?? [];
 
@@ -28,11 +33,17 @@ export default function JobsPage() {
     closeModal();
     await del.mutate(id);
   };
-  const handleDeleteClick = async (org: JobFullEntity) => {
-    openModal("delete", org);
+  const handleDeleteClick = async (job: JobFullEntity) => {
+    openModal("delete", job);
   };
-  const handleEditClick = async (org: JobFullEntity) => {
-    openModal("edit", org);
+  const handleEditClick = async (job: JobFullEntity) => {
+    openModal("edit", job);
+  };
+  const handleStatusChange = async (
+    id: JobEntity["id"],
+    status: JobEntity["status"],
+  ) => {
+    updateStatus.mutate({ id, status });
   };
 
   return (
@@ -58,7 +69,8 @@ export default function JobsPage() {
             job={o}
             handleDeleteClick={handleDeleteClick}
             handleEditClick={handleEditClick}
-            isLoading={del.isPending}
+            handleStatusChange={handleStatusChange}
+            isLoading={del.isPending || updateStatus.isPending}
           />
         ))}
       </div>

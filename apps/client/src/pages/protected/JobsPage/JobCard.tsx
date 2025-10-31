@@ -1,4 +1,8 @@
-import { JobFullEntity, JobStatusEnum } from "@hiredtobe/shared/entities";
+import {
+  JobEntity,
+  JobFullEntity,
+  JobStatusEnum,
+} from "@hiredtobe/shared/entities";
 import { Briefcase, Pencil, Trash2 } from "lucide-react";
 
 import UIButton from "@/client/components/ui/Button";
@@ -9,6 +13,8 @@ import {
   CardFooter,
   CardHeader,
 } from "@/client/shadcn/components/ui/card";
+
+import JobStatusDropdown from "./JobStatusDropdown";
 
 const getJobCardBorder = (status: JobStatusEnum) => {
   let color = "border";
@@ -23,7 +29,6 @@ const getJobCardBorder = (status: JobStatusEnum) => {
     case JobStatusEnum.offer:
       color = "pro-color-success";
       break;
-    case JobStatusEnum.applied:
     case JobStatusEnum.interview:
     case JobStatusEnum.screening:
       color = "pro-color-primary";
@@ -39,11 +44,16 @@ function JobCard({
   job,
   handleDeleteClick,
   handleEditClick,
+  handleStatusChange,
   isLoading,
 }: {
   job: JobFullEntity;
   handleDeleteClick: (org: JobFullEntity) => Promise<void>;
   handleEditClick: (org: JobFullEntity) => Promise<void>;
+  handleStatusChange: (
+    org: JobEntity["id"],
+    status: JobEntity["status"],
+  ) => void;
   isLoading?: boolean;
 }) {
   return (
@@ -76,10 +86,7 @@ function JobCard({
           <span className="font-semibold">Location: </span>
           {job.location}
         </p>
-        <p className="text-s" style={{ color: getJobCardBorder(job.status) }}>
-          <span className="font-semibold text-slate-400">Status: </span>
-          {job.status}
-        </p>
+        <JobStatusDropdown job={job} updateStatus={handleStatusChange} />
         <a
           href={job.jdLink}
           target="_blank"
