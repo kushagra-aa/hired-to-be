@@ -7,12 +7,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
+import OrganizationForm from "@/client/components/forms/organization/OrganizationForm";
 import UIButton from "@/client/components/ui/Button";
 import UIDrawer from "@/client/components/ui/Drawer";
 import { useAddOrganization } from "@/client/hooks/useOrganizations";
 import { useAuth } from "@/client/stores/auth.store";
-
-import OrganizationForm from "@/client/components/forms/organization/OrganizationForm";
 
 function AddOrganizationDialog() {
   const { user } = useAuth();
@@ -39,8 +38,10 @@ function AddOrganizationDialog() {
         },
         onError: (err: ApiError) => {
           const errors = err.data?.errors || [];
-          if (!errors) {
-            form.setError("root", { message: err.message });
+          if (!errors || errors.length <= 0) {
+            form.setError("root", {
+              message: err.data.message || err.data.error || err.message,
+            });
           }
           const errorFields = Object.entries(errors);
           errorFields.forEach(([field, error]) => {

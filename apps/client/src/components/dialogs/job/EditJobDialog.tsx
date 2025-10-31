@@ -1,45 +1,41 @@
 import { ApiError } from "@hiredtobe/shared/api";
-import { OrganizationEntity } from "@hiredtobe/shared/entities";
-import {
-  OrganizationEditFormSchema,
-  OrganizationEditFormType,
-} from "@hiredtobe/shared/schemas";
+import { JobEntity } from "@hiredtobe/shared/entities";
+import { JobEditFormSchema, JobEditFormType } from "@hiredtobe/shared/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-import OrganizationForm from "@/client/components/forms/OrganizationForm";
+import JobForm from "@/client/components/forms/job/JobForm";
 import UIButton from "@/client/components/ui/Button";
 import UIDrawer from "@/client/components/ui/Drawer";
-import { useUpdateOrganization } from "@/client/hooks/useOrganizations";
+import { useUpdateJob } from "@/client/hooks/useJobs";
 
-function EditOrganizationDialog({
-  organization,
+function EditJobDialog({
+  job,
   onOpenChange,
   open,
 }: {
-  organization: OrganizationEntity | null;
+  job: JobEntity | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
-  const form = useForm<OrganizationEditFormType>({
-    resolver: zodResolver(OrganizationEditFormSchema),
+  const form = useForm<JobEditFormType>({
+    resolver: zodResolver(JobEditFormSchema),
   });
 
-  const submit = useUpdateOrganization();
+  const submit = useUpdateJob();
 
-  const handleFormSubmit = (data: OrganizationEditFormType) => {
-    if (!organization) return;
+  const handleFormSubmit = (data: JobEditFormType) => {
+    if (!job) return;
     submit.mutate(
       {
-        id: organization.id,
+        id: job.id,
         data: {
-          name: data.name,
-          website: data.website,
-          linkedIn: data.linkedIn,
-          careersURL: data.careersURL,
-          logoURL: data.logoURL,
+          title: data.title,
+          location: data.location,
+          expectedSalary: data.expectedSalary,
+          jdLink: data.jdLink,
         },
       },
       {
@@ -49,8 +45,8 @@ function EditOrganizationDialog({
         },
         onError: (err: ApiError) => {
           const errors = err.data?.errors || [];
-          if (!errors) {
-            form.setError("root", { message: err.message });
+          if (!errors || errors.length <= 0) {
+            form.setError("root", { message: err.data?.error || err.message });
           }
           const errorFields = Object.entries(errors);
           errorFields.forEach(([field, error]) => {
@@ -64,25 +60,24 @@ function EditOrganizationDialog({
   };
 
   useEffect(() => {
-    if (organization) {
+    if (job) {
       form.reset({
-        name: organization.name,
-        website: organization.website || undefined,
-        linkedIn: organization.linkedIn || undefined,
-        careersURL: organization.careersURL || undefined,
-        logoURL: organization.logoURL || undefined,
+        title: job.title || undefined,
+        location: job.location || undefined,
+        expectedSalary: job.expectedSalary || undefined,
+        jdLink: job.jdLink || undefined,
       });
     }
-  }, [organization, form]);
+  }, [job, form]);
 
-  if (!organization) return;
+  if (!job) return;
 
   return (
     <UIDrawer
       open={open}
       onOpenChange={onOpenChange}
-      title="Edit New Organization"
-      description="Enter Organization Details"
+      title="Edit New Job"
+      description="Enter Job Details"
       trigger={null}
       closeButton={
         <UIButton className="mt-4 mb-10" variant="outline">
@@ -90,7 +85,7 @@ function EditOrganizationDialog({
         </UIButton>
       }
     >
-      <OrganizationForm
+      <JobForm
         mode="edit"
         form={form}
         onSubmit={handleFormSubmit}
@@ -100,4 +95,4 @@ function EditOrganizationDialog({
   );
 }
 
-export default EditOrganizationDialog;
+export default EditJobDialog;

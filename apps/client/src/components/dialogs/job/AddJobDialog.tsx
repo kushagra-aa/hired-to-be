@@ -1,45 +1,46 @@
 import { ApiError } from "@hiredtobe/shared/api";
-import {
-  OrganizationAddFormSchema,
-  OrganizationAddFormType,
-} from "@hiredtobe/shared/schemas";
+import { JobStatusEnum } from "@hiredtobe/shared/entities";
+import { JobAddFormSchema, JobAddFormType } from "@hiredtobe/shared/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-import OrganizationForm from "@/client/components/forms/OrganizationForm";
+import JobForm from "@/client/components/forms/job/JobForm";
 import UIButton from "@/client/components/ui/Button";
 import UIDrawer from "@/client/components/ui/Drawer";
-import { useAddOrganization } from "@/client/hooks/useOrganizations";
+import { useAddJob } from "@/client/hooks/useJobs";
 import { useAuth } from "@/client/stores/auth.store";
 
-function AddOrganizationDialog() {
+function AddJobDialog() {
   const { user } = useAuth();
 
-  const form = useForm<OrganizationAddFormType>({
-    resolver: zodResolver(OrganizationAddFormSchema),
+  const form = useForm<JobAddFormType>({
+    resolver: zodResolver(JobAddFormSchema),
   });
 
-  const submit = useAddOrganization();
+  const submit = useAddJob();
 
-  const handleFormSubmit = (data: OrganizationAddFormType) => {
+  const handleFormSubmit = (data: JobAddFormType) => {
     submit.mutate(
       {
-        name: data.name,
-        website: data.website,
-        linkedIn: data.linkedIn,
-        careersURL: data.careersURL,
-        logoURL: data.logoURL,
+        title: data.title,
+        location: data.location,
+        expectedSalary: data.expectedSalary,
+        jdLink: data.jdLink,
+        orgID: data.orgID,
+        status: JobStatusEnum.accepted,
         userID: user!.id,
       },
       {
         onSuccess: async () => {
-          toast.success("Org Added successfully");
+          toast.success("Job Added successfully");
         },
         onError: (err: ApiError) => {
           const errors = err.data?.errors || [];
-          if (!errors) {
-            form.setError("root", { message: err.message });
+          if (!errors || errors.length <= 0) {
+            form.setError("root", {
+              message: err.data.message || err.data.error || err.message,
+            });
           }
           const errorFields = Object.entries(errors);
           errorFields.forEach(([field, error]) => {
@@ -54,16 +55,16 @@ function AddOrganizationDialog() {
 
   return (
     <UIDrawer
-      title="Add New Organization"
-      description="Enter Organization Details"
-      trigger={<UIButton variant="outline">Add Organization</UIButton>}
+      title="Add New Job"
+      description="Enter Job Details"
+      trigger={<UIButton variant="outline">Add Job</UIButton>}
       closeButton={
         <UIButton className="mt-4 mb-10" variant="outline">
           Cancel
         </UIButton>
       }
     >
-      <OrganizationForm
+      <JobForm
         mode="add"
         form={form}
         onSubmit={handleFormSubmit}
@@ -73,4 +74,4 @@ function AddOrganizationDialog() {
   );
 }
 
-export default AddOrganizationDialog;
+export default AddJobDialog;

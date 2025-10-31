@@ -49,8 +49,10 @@ function EditOrganizationDialog({
         },
         onError: (err: ApiError) => {
           const errors = err.data?.errors || [];
-          if (!errors) {
-            form.setError("root", { message: err.message });
+          if (!errors || errors.length <= 0) {
+            form.setError("root", {
+              message: err.data.message || err.data.error || err.message,
+            });
           }
           const errorFields = Object.entries(errors);
           errorFields.forEach(([field, error]) => {

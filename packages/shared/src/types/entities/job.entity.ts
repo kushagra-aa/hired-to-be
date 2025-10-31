@@ -22,6 +22,9 @@ export type JobBaseEntity = {
 };
 
 export type JobEntity = JobBaseEntity & BaseEntity;
+export type JobFullEntity = JobBaseEntity & {
+  organization: OrganizationEntity;
+} & BaseEntity;
 
 export type JobAddPayloadType = JobBaseEntity & {
   userID: number;
