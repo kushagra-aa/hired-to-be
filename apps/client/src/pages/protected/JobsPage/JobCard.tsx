@@ -68,7 +68,7 @@ function JobCard({
           <Loader variant="clip" />
         </div>
       )}
-      <CardHeader className="pb-4">
+      <CardHeader className="">
         <div className="flex items-center gap-4">
           <div className="flex-1 min-w-0">
             <h3 className="font-semibold text-3xl wrap-break-word">
@@ -86,7 +86,14 @@ function JobCard({
           <span className="font-semibold">Location: </span>
           {job.location}
         </p>
-        <JobStatusDropdown job={job} updateStatus={handleStatusChange} />
+        <div>
+          <span className="text-slate-400 font-semibold">Status:</span>{" "}
+          <JobStatusDropdown
+            job={job}
+            updateStatus={handleStatusChange}
+            color={getJobCardBorder(job.status)}
+          />
+        </div>
         <a
           href={job.jdLink}
           target="_blank"

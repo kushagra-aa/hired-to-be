@@ -1,5 +1,6 @@
 import { JobEntity, JobStatusEnum } from "@hiredtobe/shared/entities";
 
+import UIButton from "@/client/components/ui/Button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,16 +13,22 @@ export const JOB_STATUSES = Object.values(JobStatusEnum);
 function JobStatusDropdown({
   job,
   updateStatus,
+  color,
 }: {
   job: JobEntity;
   updateStatus: (id: number, status: JobStatusEnum) => void;
+  color: string;
 }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="text-purple-400 hover:underline font-semibold">
-          Status: {job.status}
-        </button>
+        <UIButton
+          variant={"outline"}
+          className="rounded-3xl text-xs"
+          style={{ borderColor: color, color }}
+        >
+          <span className="undeline underline-offset-4">{job.status}</span>
+        </UIButton>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         {JOB_STATUSES.map((s) => (
