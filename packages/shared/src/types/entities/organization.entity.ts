@@ -8,6 +8,11 @@ export type OrganizationBaseEntity = {
   logoURL?: string | null;
 };
 
+export type OrganizationOptionType = {
+  label: OrganizationBaseEntity["name"];
+  value: string;
+};
+
 export type OrganizationEntity = OrganizationBaseEntity & BaseEntity;
 
 export type OrganizationAddPayloadType = OrganizationBaseEntity & {

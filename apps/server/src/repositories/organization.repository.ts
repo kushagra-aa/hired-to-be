@@ -67,6 +67,23 @@ async function findOrganizationsByUserId(
     cursor,
   );
 }
+async function getOrganizationsWithFields(
+  db: DbType,
+  userID: UserEntity["id"],
+) {
+  return await await db
+    .select({
+      value: sql<string>`CAST(${organizationModel.id} AS TEXT)`,
+      label: organizationModel.name,
+    })
+    .from(organizationModel)
+    .where(
+      and(
+        eq(organizationModel.userID, userID),
+        eq(organizationModel.isActive, true),
+      ),
+    );
+}
 
 async function findOrganizationByNameAndUserID(
   db: DbType,
@@ -109,6 +126,7 @@ async function deleteOrganization(
 export default {
   addOrganization,
   editOrganization,
+  getOrganizationsWithFields,
   findOrganizationsByUserId,
   getTotalOrganizationsByUserId,
   findOrganizationByNameAndUserID,

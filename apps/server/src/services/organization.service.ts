@@ -2,6 +2,7 @@ import {
   OrganizationAddPayloadType,
   OrganizationEditPayloadType,
   OrganizationEntity,
+  OrganizationOptionType,
   UserEntity,
 } from "@hiredtobe/shared/entities";
 import { ServiceReturnType } from "@hiredtobe/shared/types";
@@ -35,6 +36,18 @@ async function getUserOrganizationsService(
       nextCursor: organizations.nextCursor,
       total: total.count,
     },
+  };
+}
+async function getUserOrganizationsAsOptionsService(
+  db: DbType,
+  userID: UserEntity["id"],
+): ServiceReturnType<OrganizationOptionType[]> {
+  const organizations = await organizationRepository.getOrganizationsWithFields(
+    db,
+    userID,
+  );
+  return {
+    data: organizations,
   };
 }
 
@@ -129,6 +142,7 @@ async function deleteOrganizationService(
 
 export default {
   getUserOrganizations: getUserOrganizationsService,
+  getUserOrganizationsAsOptions: getUserOrganizationsAsOptionsService,
   addOrganization: addOrganizationService,
   editOrganization: editOrganizationService,
   deleteOrganization: deleteOrganizationService,

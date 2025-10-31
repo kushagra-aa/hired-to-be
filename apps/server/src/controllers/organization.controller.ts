@@ -38,6 +38,29 @@ async function getOrganizationsController(c: Context) {
   });
 }
 
+async function getOrganizationsAsOptionsController(c: Context) {
+  const db = getDb(c.env);
+
+  const { id } = c.get("user");
+
+  const organizationsResp =
+    await organizationService.getUserOrganizationsAsOptions(db, id);
+
+  if (organizationsResp.error || !organizationsResp.data)
+    return sendAPIError(c, {
+      error: organizationsResp.error || "Failed to fetch organizations",
+      message: organizationsResp.message || "Failed to fetch organizations",
+      status: organizationsResp.status || 500,
+    });
+
+  return sendAPIResponse(c, {
+    data: organizationsResp.data,
+    message: "Organizations Found Successfully",
+    status: 200,
+    cursorPagination: organizationsResp.cursorPagination,
+  });
+}
+
 async function addOrganizationController(c: Context) {
   const db = getDb(c.env);
   const { id: userID } = c.get("user");
@@ -140,6 +163,7 @@ async function deleteOrganizationController(c: Context) {
 export default {
   getOrganizations: getOrganizationsController,
   addOrganization: addOrganizationController,
+  getOrganizationsAsOptions: getOrganizationsAsOptionsController,
   editOrganization: editOrganizationController,
   deleteOrganization: deleteOrganizationController,
 };

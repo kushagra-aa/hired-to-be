@@ -10,6 +10,10 @@ organizationsRoutes.use("/*", ...withAuthMiddlewares()); // use this approach fo
 
 organizationsRoutes.get("", organizationController.getOrganizations);
 organizationsRoutes.post("", organizationController.addOrganization);
+organizationsRoutes.get(
+  "/as-options",
+  organizationController.getOrganizationsAsOptions,
+);
 
 organizationsRoutes.patch("/:id", organizationController.editOrganization);
 organizationsRoutes.delete("/:id", organizationController.deleteOrganization);
