@@ -1,4 +1,7 @@
-import { JobAddFormType, JobEditFormType } from "@hiredtobe/shared/schemas";
+import {
+  JobAddFormClientType,
+  JobEditFormType,
+} from "@hiredtobe/shared/schemas";
 import { UseFormReturn } from "react-hook-form";
 
 import UIButton from "@/client/components/ui/Button";
@@ -12,9 +15,13 @@ import { Form } from "@/client/shadcn/components/ui/form";
 
 type JobFormPropsType<T extends "add" | "edit"> = {
   mode: T;
-  form: UseFormReturn<T extends "add" ? JobAddFormType : JobEditFormType>;
-  onSubmit: (data: T extends "add" ? JobAddFormType : JobEditFormType) => void;
+  form: UseFormReturn<T extends "add" ? JobAddFormClientType : JobEditFormType>;
+  onSubmit: (
+    data: T extends "add" ? JobAddFormClientType : JobEditFormType,
+  ) => void;
   isLoading?: boolean;
+  isAddOrg?: boolean;
+  setIsAddOrg?: React.Dispatch<React.SetStateAction<boolean>>;
   organizationOptions?: T extends "add"
     ? { label: string; value: string }[]
     : undefined;
@@ -26,9 +33,13 @@ function JobForm<T extends "add" | "edit">({
   onSubmit,
   isLoading,
   organizationOptions,
+  isAddOrg,
+  setIsAddOrg,
 }: JobFormPropsType<T>) {
-  const castedForm = form as unknown as UseFormReturn<JobAddFormType>;
-  const castedSubmit = onSubmit as unknown as (data: JobAddFormType) => void;
+  const castedForm = form as unknown as UseFormReturn<JobAddFormClientType>;
+  const castedSubmit = onSubmit as unknown as (
+    data: JobAddFormClientType,
+  ) => void;
 
   return (
     <Form {...castedForm}>
@@ -55,20 +66,41 @@ function JobForm<T extends "add" | "edit">({
           required
           {...castedForm.register("location")}
         />
-        {mode === "add" && (
-          <UIInputField
-            as="select"
-            options={organizationOptions}
-            control={castedForm.control as unknown as FormControlType}
-            label="Organization"
-            placeholder="Select Organization"
-            type="number"
-            error={castedForm.formState.errors?.orgID?.message}
-            className="w-full"
-            required
-            {...castedForm.register("orgID")}
-          />
-        )}
+        <div className="w-full flex gap-4 justify-between">
+          {mode === "add" &&
+            (isAddOrg ? (
+              <UIInputField
+                control={castedForm.control as unknown as FormControlType}
+                label="Organization Name"
+                placeholder="Enter New Organization Name"
+                error={castedForm.formState.errors?.orgName?.message}
+                className="w-full"
+                required
+                {...castedForm.register("orgName")}
+              />
+            ) : (
+              <UIInputField
+                as="select"
+                options={organizationOptions}
+                control={castedForm.control as unknown as FormControlType}
+                label="Organization"
+                placeholder="Select Organization"
+                type="number"
+                error={castedForm.formState.errors?.orgID?.message}
+                className="w-full"
+                required
+                {...castedForm.register("orgID")}
+              />
+            ))}
+          <UIButton
+            variant="outline"
+            className="h-[inherit]"
+            title={!isAddOrg ? "Add New Org" : "Swtich to Searching Org"}
+            onClick={() => setIsAddOrg!((v) => !v)}
+          >
+            {!isAddOrg ? "New Org+" : "Select Org"}
+          </UIButton>
+        </div>
         <UIInputField
           control={castedForm.control as unknown as FormControlType}
           label="Job Link"
