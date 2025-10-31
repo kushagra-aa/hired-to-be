@@ -14,22 +14,22 @@ const getJobCardBorder = (status: JobStatusEnum) => {
   let color = "border";
   switch (status) {
     case JobStatusEnum.rejected:
-      color = "color-danger";
+      color = "pro-color-danger";
       break;
     case JobStatusEnum.withdrawn:
-      color = "color-warning";
+      color = "pro-color-warning";
       break;
     case JobStatusEnum.accepted:
     case JobStatusEnum.offer:
-      color = "color-success";
+      color = "pro-color-success";
       break;
     case JobStatusEnum.applied:
     case JobStatusEnum.interview:
     case JobStatusEnum.screening:
-      color = "color-accent";
+      color = "pro-color-primary";
       break;
     default:
-      color = "color-border";
+      color = "pro-color-border";
       break;
   }
   return `var(--${color})`;
@@ -72,9 +72,13 @@ function JobCard({
       </CardHeader>
 
       <CardContent className="space-y-2 h-full">
-        <p className="text-sm text-slate-400 italic">
+        <p className="text-sm text-slate-400">
           <span className="font-semibold">Location: </span>
           {job.location}
+        </p>
+        <p className="text-s" style={{ color: getJobCardBorder(job.status) }}>
+          <span className="font-semibold text-slate-400">Status: </span>
+          {job.status}
         </p>
         <a
           href={job.jdLink}

@@ -21,7 +21,7 @@ export async function getJobsAPI(
 }
 
 export async function addJobAPI(
-  payload: JobAddPayloadType,
+  payload: Omit<JobAddPayloadType, "status">,
 ): Promise<SuccessResponseType<JobEntity>> {
   const resp = await client.post<JobEntity>("", payload);
   return resp;

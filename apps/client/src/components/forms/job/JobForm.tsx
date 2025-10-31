@@ -15,6 +15,9 @@ type JobFormPropsType<T extends "add" | "edit"> = {
   form: UseFormReturn<T extends "add" ? JobAddFormType : JobEditFormType>;
   onSubmit: (data: T extends "add" ? JobAddFormType : JobEditFormType) => void;
   isLoading?: boolean;
+  organizationOptions?: T extends "add"
+    ? { label: string; value: string }[]
+    : undefined;
 };
 
 function JobForm<T extends "add" | "edit">({
@@ -22,6 +25,7 @@ function JobForm<T extends "add" | "edit">({
   form,
   onSubmit,
   isLoading,
+  organizationOptions,
 }: JobFormPropsType<T>) {
   const castedForm = form as unknown as UseFormReturn<JobAddFormType>;
   const castedSubmit = onSubmit as unknown as (data: JobAddFormType) => void;
@@ -53,6 +57,8 @@ function JobForm<T extends "add" | "edit">({
         />
         {mode === "add" && (
           <UIInputField
+            as="select"
+            options={organizationOptions}
             control={castedForm.control as unknown as FormControlType}
             label="Organization"
             placeholder="Select Organization"
@@ -82,9 +88,11 @@ function JobForm<T extends "add" | "edit">({
           required
           {...castedForm.register("expectedSalary", { valueAsNumber: true })}
         />
-        <UIButton type="submit" disabled={isLoading}>
+        <UIButton className="w-max" type="submit" disabled={isLoading}>
           {isLoading ? (
-            <Loader variant="clip" size={"xs"} color="secondary" />
+            <span className="p-8">
+              <Loader variant="clip" size={"xs"} color="secondary" />
+            </span>
           ) : (
             "Save Job"
           )}

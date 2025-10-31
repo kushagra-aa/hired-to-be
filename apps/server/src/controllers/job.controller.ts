@@ -96,7 +96,13 @@ async function addJobController(c: Context) {
   const jobsResp = await jobService.addJob(db, {
     ...validationResult.data!,
     userID: Number(userID),
-    status: JobStatusEnum.applied,
+    // status: JobStatusEnum.applied,
+    status: JobStatusEnum.screening,
+    // status: JobStatusEnum.interview,
+    // status: JobStatusEnum.offer,
+    // status: JobStatusEnum.rejected,
+    // status: JobStatusEnum.accepted,
+    // status: JobStatusEnum.withdrawn,
   });
 
   if (jobsResp.error || !jobsResp.data) {

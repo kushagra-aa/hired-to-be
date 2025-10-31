@@ -3,6 +3,7 @@ import {
   OrganizationAddPayloadType,
   OrganizationEditPayloadType,
   OrganizationEntity,
+  OrganizationOptionType,
 } from "@hiredtobe/shared/entities";
 import { SuccessResponseType } from "@hiredtobe/shared/types";
 
@@ -14,6 +15,14 @@ export async function getOrganizationsAPI(
   const resp = await client.get<OrganizationEntity[]>(
     `?${cursor ? `?cursor=${cursor}` : ""}`,
   );
+  return resp;
+}
+
+export async function getOrganizationsAsOptionsAPI(): Promise<
+  SuccessResponseType<OrganizationOptionType[]>
+> {
+  // await new Promise((resolve) => setTimeout(resolve, 10000));
+  const resp = await client.get<OrganizationOptionType[]>(`/as-options`);
   return resp;
 }
 

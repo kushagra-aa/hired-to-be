@@ -46,9 +46,9 @@ export function useAddJob() {
 
   return useAppMutation<
     JobEntity, // success type
-    JobAddPayloadType // variables type (title)
+    Omit<JobAddPayloadType, "status"> // variables type (title)
   >({
-    mutationFn: async (data: JobAddPayloadType) => {
+    mutationFn: async (data: Omit<JobAddPayloadType, "status">) => {
       return addJobAPI(
         { ...data },
         // token  // Can take Token from store for Bearer Style Auth

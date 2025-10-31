@@ -13,11 +13,19 @@ import {
   FormMessage,
 } from "@/client/shadcn/components/ui/form";
 import { Input } from "@/client/shadcn/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/client/shadcn/components/ui/select";
 
 type CommonPropsType = {
   label: string;
   name: string;
-  as?: "input" | "password";
+  as?: "input" | "password" | "select";
+  options?: { label: string; value: string }[];
   type?: InputHTMLAttributes<HTMLInputElement>["type"];
   error?: string;
   hint?: string;
@@ -37,6 +45,30 @@ type InputPropsType = { field: ControllerRenderProps<FieldValues, string> };
 type InputFieldPropsType = CommonPropsType & {
   control: FormControlType;
 };
+
+function SelectInput({
+  field,
+  options = [],
+  placeholder,
+}: InputPropsType & {
+  options?: { label: string; value: string }[];
+  placeholder?: string;
+}) {
+  return (
+    <Select onValueChange={field.onChange} defaultValue={field.value}>
+      <SelectTrigger className="w-full">
+        <SelectValue placeholder={placeholder} />
+      </SelectTrigger>
+      <SelectContent>
+        {options.map((opt) => (
+          <SelectItem key={opt.value} value={opt.value}>
+            {opt.label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+}
 
 function PasswordInput({
   field,
@@ -78,6 +110,7 @@ export function UIInputField({
   hintClassName,
   placeholder,
   required,
+  options,
 }: InputFieldPropsType) {
   return (
     <FormField
@@ -91,6 +124,12 @@ export function UIInputField({
           <FormControl>
             {as === "password" ? (
               <PasswordInput field={field} placeholder={placeholder} />
+            ) : as === "select" ? (
+              <SelectInput
+                field={field}
+                options={options}
+                placeholder={placeholder}
+              />
             ) : (
               <Input
                 className={`${inputClassName}`}

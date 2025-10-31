@@ -1,5 +1,4 @@
 import { ApiError } from "@hiredtobe/shared/api";
-import { JobStatusEnum } from "@hiredtobe/shared/entities";
 import { JobAddFormSchema, JobAddFormType } from "@hiredtobe/shared/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -9,10 +8,13 @@ import JobForm from "@/client/components/forms/job/JobForm";
 import UIButton from "@/client/components/ui/Button";
 import UIDrawer from "@/client/components/ui/Drawer";
 import { useAddJob } from "@/client/hooks/useJobs";
+import { useOrganizationsAsOptions } from "@/client/hooks/useOrganizations";
 import { useAuth } from "@/client/stores/auth.store";
 
 function AddJobDialog() {
   const { user } = useAuth();
+
+  const orgOptionsResp = useOrganizationsAsOptions();
 
   const form = useForm<JobAddFormType>({
     resolver: zodResolver(JobAddFormSchema),
@@ -28,7 +30,6 @@ function AddJobDialog() {
         expectedSalary: data.expectedSalary,
         jdLink: data.jdLink,
         orgID: data.orgID,
-        status: JobStatusEnum.accepted,
         userID: user!.id,
       },
       {
@@ -67,8 +68,9 @@ function AddJobDialog() {
       <JobForm
         mode="add"
         form={form}
+        organizationOptions={orgOptionsResp.data?.data || []}
         onSubmit={handleFormSubmit}
-        isLoading={submit.isPending}
+        isLoading={submit.isPending || orgOptionsResp.isPending}
       />
     </UIDrawer>
   );
