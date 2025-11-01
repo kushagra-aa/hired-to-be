@@ -38,9 +38,9 @@ function AddOrganizationDialog() {
         },
         onError: (err: ApiError) => {
           const errors = err.data?.errors || [];
-          if (!errors || errors.length <= 0) {
+          if (!errors) {
             form.setError("root", {
-              message: err.data.message || err.data.error || err.message,
+              message: err.data?.message || err.data?.error || err.message,
             });
           }
           const errorFields = Object.entries(errors);
