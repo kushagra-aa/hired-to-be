@@ -45,17 +45,22 @@ export default function OrganizationsPage() {
         <AddOrganizationDialog />
       </div>
       <div className="py-4">
-        {!organizations ||
-          (organizations.length <= 0 && (
-            <UIEmpty
-              title="No Organizations Yet"
-              description="You haven't created any organizations yet. Get started by
+        {!isPending &&
+          (!organizations ||
+            (organizations.length <= 0 && (
+              <UIEmpty
+                title="No Organizations Yet"
+                description="You haven't created any organizations yet. Get started by
           creating your first project."
-            />
-          ))}
+              />
+            )))}
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 py-4">
-        {isPending && <Loader variant="clip" />}
+        {isPending && (
+          <div className="col-span-4 flex items-center justify-center">
+            <Loader variant="clip" size="2xl" />
+          </div>
+        )}
         {organizations.map((o) => (
           <OrganizationCard
             organization={o}

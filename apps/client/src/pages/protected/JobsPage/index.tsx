@@ -58,17 +58,22 @@ export default function JobsPage() {
         />
       </div>
       <div className="py-4">
-        {!jobs ||
-          (jobs.length <= 0 && (
-            <UIEmpty
-              title="No Jobs Yet"
-              description="You haven't created any jobs yet. Get started by
+        {!isPending &&
+          (!jobs ||
+            (jobs.length <= 0 && (
+              <UIEmpty
+                title="No Jobs Yet"
+                description="You haven't created any jobs yet. Get started by
           creating your first project."
-            />
-          ))}
+              />
+            )))}
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 py-4">
-        {isPending && <Loader variant="clip" />}
+        {isPending && (
+          <div className="col-span-4 flex items-center justify-center">
+            <Loader variant="clip" size="2xl" />
+          </div>
+        )}
         {jobs.map((o) => (
           <JobCard
             job={o}
