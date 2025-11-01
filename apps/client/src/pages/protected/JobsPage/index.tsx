@@ -15,7 +15,7 @@ import { useModalManager } from "@/client/hooks/useModalManager";
 
 import JobCard from "./JobCard";
 
-type JobDialogType = "edit" | "delete";
+type JobDialogType = "edit" | "delete" | "add";
 
 export default function JobsPage() {
   const { modal, openModal, closeModal, isOpen } = useModalManager<
@@ -50,7 +50,12 @@ export default function JobsPage() {
     <div>
       <div className="flex gap-4 sm:justify-between flex-col sm:flex-row">
         <h1 className="text-2xl text-center">Jobs</h1>
-        <AddJobDialog />
+        <AddJobDialog
+          open={isOpen("add")}
+          onOpenChange={(open) =>
+            !open ? closeModal() : openModal("add", null)
+          }
+        />
       </div>
       <div className="py-4">
         {!jobs ||

@@ -41,6 +41,10 @@ function JobForm<T extends "add" | "edit">({
     data: JobAddFormClientType,
   ) => void;
 
+  const handleAddOrg = () => {
+    setIsAddOrg!((v) => !v);
+  };
+
   return (
     <Form {...castedForm}>
       <UIFormWrapper
@@ -95,8 +99,9 @@ function JobForm<T extends "add" | "edit">({
           <UIButton
             variant="outline"
             className="h-[inherit]"
+            type="button"
             title={!isAddOrg ? "Add New Org" : "Swtich to Searching Org"}
-            onClick={() => setIsAddOrg!((v) => !v)}
+            onClick={handleAddOrg}
           >
             {!isAddOrg ? "New Org+" : "Select Org"}
           </UIButton>

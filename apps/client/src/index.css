@@ -236,6 +236,10 @@ div[data-loading="true"]::after {
   width: 100%
 }
 
+button{
+  cursor: pointer
+}
+
 /* 3) Base layer to ensure body picks background/foreground */
 @layer base {
   * {

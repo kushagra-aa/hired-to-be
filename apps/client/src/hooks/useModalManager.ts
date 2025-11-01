@@ -11,7 +11,8 @@ export function useModalManager<TType extends string, TData = unknown>() {
     data: null,
   });
 
-  const openModal = (type: TType, data: TData) => setModal({ type, data });
+  const openModal = (type: TType, data: TData | null) =>
+    setModal({ type, data });
 
   const closeModal = () => setModal({ type: null, data: null });
 

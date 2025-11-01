@@ -18,7 +18,13 @@ import {
 } from "@/client/hooks/useOrganizations";
 import { useAuth } from "@/client/stores/auth.store";
 
-function AddJobDialog() {
+function AddJobDialog({
+  onOpenChange,
+  open,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
   const [isAddOrg, setIsAddOrg] = useState(false);
   const { user } = useAuth();
 
@@ -44,6 +50,8 @@ function AddJobDialog() {
       {
         onSuccess: async () => {
           toast.success("Job Added successfully");
+          form.reset();
+          onOpenChange(false);
         },
         onError: (err: ApiError) => {
           const errors = err.data?.errors || [];
@@ -90,19 +98,25 @@ function AddJobDialog() {
           },
         },
       );
-    // else await handleAddJob(data);
+    else await handleAddJob(data);
   };
 
   return (
     <UIDrawer
       title="Add New Job"
       description="Enter Job Details"
-      trigger={<UIButton variant="outline">Add Job</UIButton>}
+      trigger={
+        <UIButton onClick={() => onOpenChange(true)} variant="outline">
+          Add Job
+        </UIButton>
+      }
       closeButton={
         <UIButton className="mt-4 mb-10" variant="outline">
           Cancel
         </UIButton>
       }
+      open={open}
+      onOpenChange={onOpenChange}
     >
       <JobForm
         mode="add"
