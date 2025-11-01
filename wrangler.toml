@@ -34,12 +34,13 @@ database_id = "e07e498c-ed39-4805-a813-212d6bf95456"
 migrations_dir = "migrations"
 
 [env.production.assets]
-directory = "apps/client/dist"
+directory = "apps/server/public"
+binding = "ASSETS"
 
 [env.production.vars]
 NODE_ENV = "production"
 CLIENT_BASE_URI = "https://hiredtobe.kushagra-pyjs.workers.dev/"
-CLIENT_REDIRECT_ENDPOINT = "/jobs"
+CLIENT_REDIRECT_ENDPOINT = "/app/jobs"
 # OAuth redirect URI
 OAUTH_REDIRECT_ENDPOINT = "/api/auth/google/callback"
 # Google Accounts API

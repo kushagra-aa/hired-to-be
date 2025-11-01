@@ -11,8 +11,9 @@ export default defineConfig({
       "/api": "http://localhost:8000", // Wrangler dev server
     },
   },
+  base: "/app",
   build: {
-    outDir: "dist",
+    outDir: "../server/public/app",
     emptyOutDir: true,
   },
 });

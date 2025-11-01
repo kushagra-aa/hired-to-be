@@ -84,7 +84,7 @@ const routes: RouteObject[] = [
   },
 ];
 
-export const router = createBrowserRouter(routes);
+export const router = createBrowserRouter(routes, { basename: "/app" });
 
 // Can Configure User's Landing pages based on Roles
 export const USER_LANDING_PAGES: Record<UserRoleEnum, string> = {
