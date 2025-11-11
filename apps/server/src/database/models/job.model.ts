@@ -5,7 +5,6 @@ import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { baseFields } from "./base.model";
 import { jobDocumentModel } from "./jobDocument.mode";
 import { organizationModel } from "./organization.model";
-import { recruiterModel } from "./recruiter.model";
 import { userModel } from "./user.model";
 
 export const jobModel = sqliteTable("jobs", {
@@ -38,6 +37,5 @@ export const jobRelations = relations(jobModel, ({ one, many }) => ({
     fields: [jobModel.orgID],
     references: [organizationModel.id],
   }),
-  recruiters: many(recruiterModel),
   documents: many(jobDocumentModel),
 }));

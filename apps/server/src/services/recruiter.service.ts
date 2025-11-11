@@ -1,5 +1,5 @@
 import {
-  JobEntity,
+  OrganizationEntity,
   RecruiterAddPayloadType,
   RecruiterEditPayloadType,
   RecruiterEntity,
@@ -12,7 +12,7 @@ import { DbType } from "@/server/database";
 import { RecruiterModelType } from "@/server/database/models";
 import recruiterRepository from "@/server/repositories/recruiter.repository";
 
-import jobRepository from "../repositories/job.repository";
+import organizationRepository from "../repositories/organization.repository";
 
 export type GetRecruiterExtendType =
   | false
@@ -28,26 +28,29 @@ const formatRecruitersResponse = (
 ): RecruiterResponseType[] =>
   recruiters.map((recruiter) => formatRecruiterResponse(recruiter));
 
-const checkJob = async (
+const checkOrganization = async (
   db: DbType,
-  jobID: JobEntity["id"],
+  orgID: OrganizationEntity["id"],
   userID: UserEntity["id"],
-): ServiceReturnType<JobEntity> => {
-  const job = await jobRepository.findJobByID(db, jobID, true);
-  if (!job)
+): ServiceReturnType<OrganizationEntity> => {
+  const organization = await organizationRepository.findOrganizationByID(
+    db,
+    orgID,
+  );
+  if (!organization)
     return {
       error: "Not Found",
-      message: "No Job Found with this ID",
-      errors: { jobID: ["Job with this ID does not exist"] },
+      message: "No Organization Found with this ID",
+      errors: { orgID: ["Organization with this ID does not exist"] },
       status: 404,
     };
-  if (job.userID !== userID)
+  if (organization.userID !== userID)
     return {
       error: "UnAuthorized",
-      message: "You are not authorized to access this job",
+      message: "You are not authorized to access this organization",
       status: 401,
     };
-  return { data: job as JobEntity };
+  return { data: organization as OrganizationEntity };
 };
 
 async function getUserRecruitersService(
@@ -110,11 +113,11 @@ async function addRecruiterService(
   payload: RecruiterAddPayloadType,
   userID: UserEntity["id"],
 ): ServiceReturnType<RecruiterEntity> {
-  const job = await checkJob(db, payload.jobID, userID);
+  const job = await checkOrganization(db, payload.orgID, userID);
   if (job?.error || !job.data) return job;
   const [newRecruiter] = await recruiterRepository.addRecruiter(db, {
     ...payload,
-    orgID: job.data.orgID,
+    orgID: payload.orgID,
     userID,
   });
   return { data: formatRecruiterResponse(newRecruiter) };
@@ -139,10 +142,6 @@ async function editRecruiterService(
       message: "You are not authorized to edit this recruiter",
       status: 401,
     };
-  if (payload.jobID) {
-    const job = await checkJob(db, payload.jobID, userID);
-    if (job?.error || !job.data) return job;
-  }
 
   const [newRecruiter] = await recruiterRepository.editRecruiter(
     db,

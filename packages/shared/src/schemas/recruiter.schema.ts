@@ -7,7 +7,7 @@ export const RecruiterAddFormSchema = z.object({
   email: z.email().optional(),
   phone: z.string().regex(phoneRegex).optional(),
   linkedIn: z.url().optional(),
-  jobID: z.number().min(1),
+  orgID: z.number().min(1),
 });
 
 export type RecruiterAddFormType = z.infer<typeof RecruiterAddFormSchema>;
@@ -17,7 +17,7 @@ export const RecruiterEditFormSchema = z.object({
   email: z.email().optional(),
   phone: z.string().regex(phoneRegex).optional(),
   linkedIn: z.url().optional(),
-  jobID: z.number().min(1).optional(),
+  orgID: z.number().min(1).optional(),
 });
 
 export type RecruiterEditFormType = z.infer<typeof RecruiterEditFormSchema>;

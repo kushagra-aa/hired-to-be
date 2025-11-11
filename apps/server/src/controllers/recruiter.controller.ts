@@ -15,7 +15,7 @@ import { DEFAULT_CURSOR_PAGINATION_CONFIG } from "@/server/utils/constants";
 import { recruiterValidator } from "@/server/utils/validators/recruiter.validator";
 
 const recruiterExtendParamSchema = z.array(
-  z.union([z.literal("organization"), z.literal("job"), z.literal("user")]),
+  z.union([z.literal("organization"), z.literal("user")]),
 );
 
 async function getRecruitersController(c: Context) {

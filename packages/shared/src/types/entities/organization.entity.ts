@@ -1,4 +1,4 @@
-import { BaseEntity } from ".";
+import { BaseEntity, RecruiterEntity } from ".";
 
 export type OrganizationBaseEntity = {
   name: string;
@@ -20,3 +20,7 @@ export type OrganizationAddPayloadType = OrganizationBaseEntity & {
 };
 
 export type OrganizationEditPayloadType = Partial<OrganizationBaseEntity>;
+
+export type OrganizationFullEntity = OrganizationEntity & {
+  recruiters: RecruiterEntity[];
+};

@@ -72,7 +72,6 @@ async function findRecruitersByUserId(
         with: extend
           ? {
               organization: extend.includes("organization") ? true : undefined,
-              job: extend.includes("job") ? true : undefined,
               user: extend.includes("user") ? true : undefined,
             }
           : undefined,
@@ -97,7 +96,6 @@ async function findRecruiterByUserId(
     with: extend
       ? {
           organization: extend.includes("organization") ? true : undefined,
-          job: extend.includes("job") ? true : undefined,
           user: extend.includes("user") ? true : undefined,
         }
       : undefined,
@@ -115,9 +113,6 @@ async function findRecruiterByID(
     with: extend
       ? {
           organization: extend.organization ? true : undefined,
-          job: extend.job
-            ? { with: { user: extend.job.user ? true : undefined } }
-            : undefined,
         }
       : undefined,
   });

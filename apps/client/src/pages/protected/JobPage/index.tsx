@@ -236,7 +236,7 @@ export default function JobPage() {
               <PlusCircle className="h-6! w-6!" />
             </UIButton>
           </div>
-          {job.recruiters?.map((r) => (
+          {job.organization.recruiters?.map((r) => (
             <div key={r.id}>{r.name}</div>
           ))}
         </div>
