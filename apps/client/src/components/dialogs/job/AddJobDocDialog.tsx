@@ -1,46 +1,44 @@
 import { ApiError } from "@hiredtobe/shared/api";
 import { JobEntity } from "@hiredtobe/shared/entities";
-import { JobEditFormSchema, JobEditFormType } from "@hiredtobe/shared/schemas";
+import {
+  JobDocumentAddFormSchema,
+  JobDocumentAddFormType,
+} from "@hiredtobe/shared/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-import JobDocForm from "@/client/components/forms/job/JobForm";
+import JobDocForm from "@/client/components/forms/job/JobDocForm";
 import UIButton from "@/client/components/ui/Button";
 import UIDrawer from "@/client/components/ui/Drawer";
-import { useUpdateJob } from "@/client/hooks/useJobs";
+import { useAddJobDoc } from "@/client/hooks/useJobDocs";
 
-function EditJobDialog({
-  job,
+function AddJobDocDialog({
+  jobID,
   onOpenChange,
   open,
 }: {
-  job: JobEntity | null;
+  jobID: JobEntity["id"];
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
-  const form = useForm<JobEditFormType>({
-    resolver: zodResolver(JobEditFormSchema),
+  const form = useForm<JobDocumentAddFormType>({
+    resolver: zodResolver(JobDocumentAddFormSchema),
   });
 
-  const submit = useUpdateJob();
+  const submit = useAddJobDoc({ jobID });
 
-  const handleFormSubmit = (data: JobEditFormType) => {
-    if (!job) return;
+  const handleFormSubmit = (data: JobDocumentAddFormType) => {
+    if (!jobID) return;
     submit.mutate(
       {
-        id: job.id,
-        data: {
-          title: data.title,
-          location: data.location,
-          expectedSalary: data.expectedSalary,
-          jdLink: data.jdLink,
-        },
+        type: data.type,
+        url: data.url,
       },
       {
         onSuccess: async () => {
-          toast.success("Job Edited successfully");
+          toast.success("Doc Added successfully");
+          form.reset();
           onOpenChange(false);
         },
         onError: (err: ApiError) => {
@@ -59,18 +57,7 @@ function EditJobDialog({
     );
   };
 
-  useEffect(() => {
-    if (job) {
-      form.reset({
-        title: job.title || undefined,
-        location: job.location || undefined,
-        expectedSalary: job.expectedSalary || undefined,
-        jdLink: job.jdLink || undefined,
-      });
-    }
-  }, [job, form]);
-
-  if (!job) return;
+  if (!jobID) return;
 
   return (
     <UIDrawer
@@ -86,7 +73,6 @@ function EditJobDialog({
       }
     >
       <JobDocForm
-        mode="edit"
         form={form}
         onSubmit={handleFormSubmit}
         isLoading={submit.isPending}
@@ -95,4 +81,4 @@ function EditJobDialog({
   );
 }
 
-export default EditJobDialog;
+export default AddJobDocDialog;

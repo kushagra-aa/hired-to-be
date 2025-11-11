@@ -1,4 +1,4 @@
-import { BaseEntity, OrganizationEntity, UserEntity } from ".";
+import { BaseEntity, OrganizationEntity, RecruiterEntity, UserEntity } from ".";
 
 // Job Status Source of truth
 export enum JobStatusEnum {
@@ -24,6 +24,8 @@ export type JobBaseEntity = {
 export type JobEntity = JobBaseEntity & BaseEntity;
 export type JobFullEntity = JobBaseEntity & {
   organization: OrganizationEntity;
+  documents: JobDocumentEntity[];
+  recruiters: RecruiterEntity[];
 } & BaseEntity;
 
 export type JobAddPayloadType = JobBaseEntity & {

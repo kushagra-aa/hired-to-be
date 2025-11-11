@@ -14,9 +14,18 @@ export async function getJobsAPI(
   extend: string[] = [],
 ): Promise<SuccessResponseType<JobFullEntity[]>> {
   const params = `&extend=${extend.join(",")}`;
-  const resp = await client.get<JobEntity[]>(
+  const resp = await client.get<JobFullEntity[]>(
     `?${cursor ? `?cursor=${cursor}` : ""}${params}`,
   );
+  return resp;
+}
+
+export async function getJobByIDAPI(
+  id: string,
+  extend: string[] = [],
+): Promise<SuccessResponseType<JobFullEntity>> {
+  const params = `extend=${extend.join(",")}`;
+  const resp = await client.get<JobFullEntity>(`/${id}?${params}`);
   return resp;
 }
 

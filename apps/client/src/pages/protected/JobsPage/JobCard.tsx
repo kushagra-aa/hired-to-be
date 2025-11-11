@@ -1,8 +1,4 @@
-import {
-  JobEntity,
-  JobFullEntity,
-  JobStatusEnum,
-} from "@hiredtobe/shared/entities";
+import { JobEntity, JobFullEntity } from "@hiredtobe/shared/entities";
 import { Briefcase, EyeIcon, Pencil, Trash2 } from "lucide-react";
 import { Link } from "react-router";
 
@@ -14,32 +10,9 @@ import {
   CardFooter,
   CardHeader,
 } from "@/client/shadcn/components/ui/card";
+import { getJobCardBorder } from "@/client/utils/style.utils";
 
 import JobStatusDropdown from "./JobStatusDropdown";
-
-const getJobCardBorder = (status: JobStatusEnum) => {
-  let color = "border";
-  switch (status) {
-    case JobStatusEnum.rejected:
-      color = "pro-color-danger";
-      break;
-    case JobStatusEnum.withdrawn:
-      color = "pro-color-warning";
-      break;
-    case JobStatusEnum.accepted:
-    case JobStatusEnum.offer:
-      color = "pro-color-success";
-      break;
-    case JobStatusEnum.interview:
-    case JobStatusEnum.screening:
-      color = "pro-color-primary";
-      break;
-    default:
-      color = "pro-color-border";
-      break;
-  }
-  return `var(--${color})`;
-};
 
 function JobCard({
   job,
@@ -70,11 +43,9 @@ function JobCard({
         </div>
       )}
       <CardHeader className="">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 overflow-x-hidden">
           <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-3xl wrap-break-word">
-              {job.title}
-            </h3>
+            <h3 className="font-semibold text-3xl truncate">{job.title}</h3>
             <p className="font-extralight text-xl wrap-break-word">
               {job.organization?.name}
             </p>

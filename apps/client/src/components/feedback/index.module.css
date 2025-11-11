@@ -8,6 +8,10 @@
   height: 100vh;
   justify-content: center;
   text-align: center;
+
+  &.component{
+    height: 50vh;
+  }
 }
 
 .title {

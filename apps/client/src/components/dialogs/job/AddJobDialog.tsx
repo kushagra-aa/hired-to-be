@@ -8,7 +8,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-import JobForm from "@/client/components/forms/job/JobForm";
+import JobDocForm from "@/client/components/forms/job/JobForm";
 import UIButton from "@/client/components/ui/Button";
 import UIDrawer from "@/client/components/ui/Drawer";
 import { useAddJob } from "@/client/hooks/useJobs";
@@ -118,7 +118,7 @@ function AddJobDialog({
       open={open}
       onOpenChange={onOpenChange}
     >
-      <JobForm
+      <JobDocForm
         mode="add"
         form={form}
         organizationOptions={orgOptionsResp.data?.data || []}

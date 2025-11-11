@@ -11,15 +11,24 @@ import {
   deleteJobAPI,
   editJobAPI,
   editJobStatusAPI,
+  getJobByIDAPI,
   getJobsAPI,
 } from "@/client/lib/api/jobs.api";
 import { appQueryClient } from "@/client/lib/query-client";
 import { useAuth } from "@/client/stores/auth.store";
 
-import { useAppInfiniteQuery, useAppMutation } from "./useAppQuery";
+import {
+  useAppInfiniteQuery,
+  useAppMutation,
+  useAppQuery,
+} from "./useAppQuery";
 
 // Query Keys
-const JOB_KEY = (userId?: number) => ["jobs", userId];
+export const JOB_KEY = (userId?: number, ...args: string[]) => [
+  "jobs",
+  userId,
+  ...args,
+];
 
 // Fetch Jobs
 export function useJobs() {
@@ -37,6 +46,16 @@ export function useJobs() {
         ? lastPage?.cursorPagination.nextCursor
         : undefined;
     },
+    enabled: !!user?.id,
+  });
+}
+
+// Fetch Job By ID
+export function useJobByID({ id, extend }: { id: string; extend?: string[] }) {
+  const { user } = useAuth();
+  return useAppQuery<JobFullEntity, ReturnType<typeof JOB_KEY>>({
+    queryKey: JOB_KEY(user?.id, String(id)),
+    queryFn: () => getJobByIDAPI(id, extend ?? ["organization"]),
     enabled: !!user?.id,
   });
 }

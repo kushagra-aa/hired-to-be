@@ -24,7 +24,7 @@ function JobStatusDropdown({
       <DropdownMenuTrigger asChild>
         <UIButton
           variant={"outline"}
-          className="rounded-3xl text-xs"
+          className="rounded-lg text-xs"
           style={{ borderColor: color, color }}
         >
           <span className="undeline underline-offset-4">{job.status}</span>
