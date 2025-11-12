@@ -20,6 +20,9 @@ const JobPage = lazy(() => import("@/client/pages/protected/JobPage"));
 const OrganizationsPage = lazy(
   () => import("@/client/pages/protected/OrganizationsPage"),
 );
+const OrganizationPage = lazy(
+  () => import("@/client/pages/protected/OrganizationPage"),
+);
 const NotFoundPage = lazy(() => import("@/client/pages/NotFoundPage"));
 
 const routes: RouteObject[] = [
@@ -53,6 +56,16 @@ const routes: RouteObject[] = [
           <ProtectedRoute roles={[UserRoleEnum.user]}>
             <Suspense fallback={<PageLoader />}>
               <OrganizationsPage />
+            </Suspense>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/organizations/:id",
+        element: (
+          <ProtectedRoute roles={[UserRoleEnum.user]}>
+            <Suspense fallback={<PageLoader />}>
+              <OrganizationPage />
             </Suspense>
           </ProtectedRoute>
         ),

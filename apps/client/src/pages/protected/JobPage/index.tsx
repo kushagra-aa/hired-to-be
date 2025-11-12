@@ -33,12 +33,12 @@ import {
 import { useModalManager } from "@/client/hooks/useModalManager";
 import { useDeleteRecruiter } from "@/client/hooks/useRecruiters";
 import { appQueryClient } from "@/client/lib/query-client";
+import JobStatusDropdown from "@/client/pages/protected/JobsPage/JobStatusDropdown";
+import RecruiterCard from "@/client/pages/protected/OrganizationsPage/RecruiterCard";
 import { cn } from "@/client/shadcn/lib/utils";
 import { useAuth } from "@/client/stores/auth.store";
 import { getJobCardBorder } from "@/client/utils/style.utils";
 
-import JobStatusDropdown from "../JobsPage/JobStatusDropdown";
-import RecruiterCard from "../OrganizationsPage/RecruiterCard";
 import styles from "./index.module.css";
 
 type JobDialogType =
@@ -297,7 +297,7 @@ export default function JobPage() {
               <PlusCircle className="h-6! w-6!" />
             </UIButton>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {job.organization.recruiters?.map((r) => (
               <RecruiterCard
                 recruiter={r}

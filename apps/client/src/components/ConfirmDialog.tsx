@@ -32,8 +32,8 @@ function ConfirmDialog({
         </UIButton>,
       ]}
       closeButton={
-        <UIButton className="" variant="outline">
-          Cancel
+        <UIButton asChild className="" variant="outline">
+          <span>Cancel</span>
         </UIButton>
       }
     />

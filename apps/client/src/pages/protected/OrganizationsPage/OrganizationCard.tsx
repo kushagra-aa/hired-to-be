@@ -1,6 +1,7 @@
 import { OrganizationEntity } from "@hiredtobe/shared/entities";
 import { getInitials } from "@hiredtobe/shared/utils";
 import { Briefcase, Globe, Linkedin, Pencil, Trash2 } from "lucide-react";
+import { Link } from "react-router";
 
 import UIButton from "@/client/components/ui/Button";
 import Loader from "@/client/components/ui/Loader";
@@ -39,27 +40,31 @@ function OrganizationCard({
         </div>
       )}
       <CardHeader className="pb-4">
-        {/* <Link
-          to={`organizations/${organization.id}`}
-          className="underline underline-offset-4"
-        > */}
-        <div className="flex items-center gap-4">
-          <Avatar className="h-16 w-16">
-            <AvatarImage
-              src={organization.logoURL || undefined}
-              alt={organization.name}
-            />
-            <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white text-lg font-semibold">
-              {getInitials(organization.name)}
-            </AvatarFallback>
-          </Avatar>
-          <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-lg wrap-break-word">
-              {organization.name}
-            </h3>
+        <Link
+          to={`${organization.id}`}
+          className=" hover:bg-background"
+          style={{
+            transition: "all 0.25s ease-in-out",
+            borderRadius: "50px 0 0 50px",
+          }}
+        >
+          <div className="flex items-center gap-4">
+            <Avatar className="h-16 w-16">
+              <AvatarImage
+                src={organization.logoURL || undefined}
+                alt={organization.name}
+              />
+              <AvatarFallback className="no-underline bg-gradient-to-br from-blue-500 to-purple-600 text-white text-lg font-semibold">
+                {getInitials(organization.name)}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex-1 min-w-0">
+              <p className="font-semibold text-lg wrap-break-word underline underline-offset-4">
+                {organization.name}
+              </p>
+            </div>
           </div>
-        </div>
-        {/* </Link> */}
+        </Link>
       </CardHeader>
 
       <CardContent className="space-y-2 h-full">

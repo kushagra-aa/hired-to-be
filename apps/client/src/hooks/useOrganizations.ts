@@ -2,6 +2,7 @@ import {
   OrganizationAddPayloadType,
   OrganizationEditPayloadType,
   OrganizationEntity,
+  OrganizationFullEntity,
   OrganizationOptionType,
 } from "@hiredtobe/shared/entities";
 import { SuccessResponseType } from "@hiredtobe/shared/types";
@@ -10,6 +11,7 @@ import {
   addOrganizationAPI,
   deleteOrganizationAPI,
   editOrganizationAPI,
+  getOrganizationByIDAPI,
   getOrganizationsAPI,
   getOrganizationsAsOptionsAPI,
 } from "@/client/lib/api/organizations.api";
@@ -23,7 +25,7 @@ import {
 } from "./useAppQuery";
 
 // Query Keys
-const ORGANIZATION_KEY = (userId?: number, ...args: string[]) => [
+export const ORGANIZATION_KEY = (userId?: number, ...args: string[]) => [
   "organizations",
   userId,
   ...args,
@@ -45,6 +47,25 @@ export function useOrganizations() {
         ? lastPage?.cursorPagination.nextCursor
         : undefined;
     },
+    enabled: !!user?.id,
+  });
+}
+
+// Fetch Organization By ID
+export function useOrganizationByID({
+  id,
+  extend,
+}: {
+  id: string;
+  extend?: string[];
+}) {
+  const { user } = useAuth();
+  return useAppQuery<
+    OrganizationFullEntity,
+    ReturnType<typeof ORGANIZATION_KEY>
+  >({
+    queryKey: ORGANIZATION_KEY(user?.id, String(id)),
+    queryFn: () => getOrganizationByIDAPI(id, extend ?? ["organization"]),
     enabled: !!user?.id,
   });
 }

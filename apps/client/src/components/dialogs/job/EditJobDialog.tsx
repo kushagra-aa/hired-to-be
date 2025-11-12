@@ -80,8 +80,8 @@ function EditJobDialog({
       description="Enter Job Details"
       trigger={null}
       closeButton={
-        <UIButton className="mt-4 mb-10" variant="outline">
-          Cancel
+        <UIButton asChild className="mt-4 mb-10" variant="outline">
+          <span>Cancel</span>
         </UIButton>
       }
     >

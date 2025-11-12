@@ -63,6 +63,7 @@ export default function OrganizationsPage() {
         )}
         {organizations.map((o) => (
           <OrganizationCard
+            key={o.id}
             organization={o}
             handleDeleteClick={handleDeleteClick}
             handleEditClick={handleEditClick}

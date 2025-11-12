@@ -76,6 +76,7 @@ export default function JobsPage() {
         )}
         {jobs.map((o) => (
           <JobCard
+            key={o.id}
             job={o}
             handleDeleteClick={handleDeleteClick}
             handleEditClick={handleEditClick}

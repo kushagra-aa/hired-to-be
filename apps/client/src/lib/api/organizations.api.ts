@@ -3,6 +3,7 @@ import {
   OrganizationAddPayloadType,
   OrganizationEditPayloadType,
   OrganizationEntity,
+  OrganizationFullEntity,
   OrganizationOptionType,
 } from "@hiredtobe/shared/entities";
 import { SuccessResponseType } from "@hiredtobe/shared/types";
@@ -15,6 +16,15 @@ export async function getOrganizationsAPI(
   const resp = await client.get<OrganizationEntity[]>(
     `?${cursor ? `?cursor=${cursor}` : ""}`,
   );
+  return resp;
+}
+
+export async function getOrganizationByIDAPI(
+  id: string,
+  extend: string[] = [],
+): Promise<SuccessResponseType<OrganizationFullEntity>> {
+  const params = `extend=${extend.join(",")}`;
+  const resp = await client.get<OrganizationFullEntity>(`/${id}?${params}`);
   return resp;
 }
 

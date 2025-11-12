@@ -106,13 +106,13 @@ function AddJobDialog({
       title="Add New Job"
       description="Enter Job Details"
       trigger={
-        <UIButton onClick={() => onOpenChange(true)} variant="outline">
-          Add Job
+        <UIButton asChild onClick={() => onOpenChange(true)} variant="outline">
+          <span>Add Job</span>
         </UIButton>
       }
       closeButton={
-        <UIButton className="mt-4 mb-10" variant="outline">
-          Cancel
+        <UIButton asChild className="mt-4 mb-10" variant="outline">
+          <span>Cancel</span>
         </UIButton>
       }
       open={open}
