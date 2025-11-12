@@ -38,6 +38,7 @@ type CommonPropsType = {
   hintClassName?: string;
   iconClassName?: string;
   required?: boolean;
+  readOnly?: boolean;
 };
 
 export type FormControlType = Control<FieldValues, any, FieldValues>;
@@ -110,6 +111,7 @@ export function UIInputField({
   hintClassName,
   placeholder,
   required,
+  readOnly,
   options,
 }: InputFieldPropsType) {
   return (
@@ -136,6 +138,7 @@ export function UIInputField({
                 placeholder={placeholder}
                 type={type}
                 required={required}
+                readOnly={readOnly}
                 {...field}
               />
             )}

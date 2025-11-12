@@ -25,5 +25,9 @@
 @media screen and (max-width: 640px) {
     .job_grid{
         grid-template-columns: 1fr;
+
+        &>.docs_container{
+            grid-row: 5;
+        }
     }
 }

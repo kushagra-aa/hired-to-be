@@ -4,7 +4,7 @@ import { phoneRegex } from "../constants";
 
 export const RecruiterAddFormSchema = z.object({
   name: z.string().min(3).max(255),
-  email: z.email().optional(),
+  email: z.email(),
   phone: z.string().regex(phoneRegex).optional(),
   linkedIn: z.url().optional(),
   orgID: z.number().min(1),
