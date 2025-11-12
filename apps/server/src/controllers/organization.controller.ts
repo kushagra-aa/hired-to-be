@@ -1,4 +1,6 @@
+import { parseJsonParam } from "@hiredtobe/shared/utils";
 import { Context } from "hono";
+import z from "zod";
 
 import { getDb } from "@/server/database";
 import {
@@ -6,21 +8,64 @@ import {
   sendAPIResponse,
   sendValidationError,
 } from "@/server/lib/response";
-import organizationService from "@/server/services/organization.service";
+import organizationService, {
+  GetOrganizationExtendType,
+} from "@/server/services/organization.service";
 import { DEFAULT_CURSOR_PAGINATION_CONFIG } from "@/server/utils/constants";
 import { organizationValidator } from "@/server/utils/validators/organization.validator";
+
+const organizationExtendParamSchema = z.array(
+  z.union([z.literal("recruiters"), z.literal("jobs")]),
+);
 
 async function getOrganizationsController(c: Context) {
   const db = getDb(c.env);
 
   const { id } = c.get("user");
   const cursor = c.req.query("cursor");
+  const extend = parseJsonParam<GetOrganizationExtendType>(
+    c.req.queries("extend"),
+    organizationExtendParamSchema,
+  );
 
   const organizationsResp = await organizationService.getUserOrganizations(
     db,
     id,
     DEFAULT_CURSOR_PAGINATION_CONFIG.pageSize,
     cursor ? Number(cursor) : undefined,
+    extend,
+  );
+
+  if (organizationsResp.error || !organizationsResp.data)
+    return sendAPIError(c, {
+      error: organizationsResp.error || "Failed to fetch organizations",
+      message: organizationsResp.message || "Failed to fetch organizations",
+      status: organizationsResp.status || 500,
+    });
+
+  return sendAPIResponse(c, {
+    data: organizationsResp.data,
+    message: "Organizations Found Successfully",
+    status: 200,
+    cursorPagination: organizationsResp.cursorPagination,
+  });
+}
+
+async function getOrganizationController(c: Context) {
+  const db = getDb(c.env);
+
+  const { id } = c.req.param();
+  const { id: userID } = c.get("user");
+  const extend = parseJsonParam<GetOrganizationExtendType>(
+    c.req.queries("extend"),
+    organizationExtendParamSchema,
+  );
+
+  const organizationsResp = await organizationService.getUserOrganizationByID(
+    db,
+    Number(id),
+    userID,
+    extend,
   );
 
   if (organizationsResp.error || !organizationsResp.data)
@@ -162,6 +207,7 @@ async function deleteOrganizationController(c: Context) {
 
 export default {
   getOrganizations: getOrganizationsController,
+  getOrganization: getOrganizationController,
   addOrganization: addOrganizationController,
   getOrganizationsAsOptions: getOrganizationsAsOptionsController,
   editOrganization: editOrganizationController,

@@ -8,6 +8,7 @@ import { and, eq, sql } from "drizzle-orm";
 
 import { DbType } from "@/server/database";
 import { organizationModel } from "@/server/database/models";
+import { GetOrganizationExtendType } from "@/server/services/organization.service";
 import { paginate } from "@/server/utils/helpers";
 
 async function addOrganization(db: DbType, org: OrganizationAddPayloadType) {
@@ -45,6 +46,7 @@ async function findOrganizationsByUserId(
   userID: UserEntity["id"],
   pageSize = 10,
   cursor?: number,
+  extend?: GetOrganizationExtendType,
 ) {
   return await paginate(
     async (cursor, limit) =>
@@ -62,6 +64,12 @@ async function findOrganizationsByUserId(
               ),
         orderBy: (fields, { asc }) => [asc(fields.createdAt)],
         limit,
+        with: extend
+          ? {
+              jobs: extend.includes("jobs") ? true : undefined,
+              recruiters: extend.includes("recruiters") ? true : undefined,
+            }
+          : undefined,
       }),
     pageSize,
     cursor,
@@ -85,6 +93,26 @@ async function getOrganizationsWithFields(
     );
 }
 
+async function getOrganizationByUserID(
+  db: DbType,
+  id: OrganizationEntity["id"],
+  userID: UserEntity["id"],
+  extend?: GetOrganizationExtendType,
+) {
+  return await db.query.organizationModel.findFirst({
+    where: (fields, operators) =>
+      operators.and(
+        operators.eq(fields.userID, userID),
+        operators.eq(fields.id, id),
+      ),
+    with: extend
+      ? {
+          jobs: extend.includes("jobs") ? true : undefined,
+          recruiters: extend.includes("recruiters") ? true : undefined,
+        }
+      : undefined,
+  });
+}
 async function findOrganizationByNameAndUserID(
   db: DbType,
   name: string,
@@ -99,9 +127,19 @@ async function findOrganizationByNameAndUserID(
   });
 }
 
-async function findOrganizationByID(db: DbType, id: OrganizationEntity["id"]) {
+async function findOrganizationByID(
+  db: DbType,
+  id: OrganizationEntity["id"],
+  extend?: GetOrganizationExtendType,
+) {
   return await db.query.organizationModel.findFirst({
     where: (fields, operators) => operators.eq(fields.id, id),
+    with: extend
+      ? {
+          jobs: extend.includes("jobs") ? true : undefined,
+          recruiters: extend.includes("recruiters") ? true : undefined,
+        }
+      : undefined,
   });
 }
 
@@ -127,6 +165,7 @@ export default {
   addOrganization,
   editOrganization,
   getOrganizationsWithFields,
+  getOrganizationByUserID,
   findOrganizationsByUserId,
   getTotalOrganizationsByUserId,
   findOrganizationByNameAndUserID,

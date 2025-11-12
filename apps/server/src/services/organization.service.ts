@@ -10,17 +10,21 @@ import { ServiceReturnType } from "@hiredtobe/shared/types";
 import { DbType } from "@/server/database";
 import organizationRepository from "@/server/repositories/organization.repository";
 
+export type GetOrganizationExtendType = false | ("jobs" | "recruiters")[];
+
 async function getUserOrganizationsService(
   db: DbType,
   userID: UserEntity["id"],
   pageSize?: number,
   cursor?: number,
+  extend?: GetOrganizationExtendType,
 ): ServiceReturnType<OrganizationEntity[]> {
   const organizations = await organizationRepository.findOrganizationsByUserId(
     db,
     userID,
     pageSize,
     cursor,
+    extend,
   );
   const [total] = await organizationRepository.getTotalOrganizationsByUserId(
     db,
@@ -36,6 +40,29 @@ async function getUserOrganizationsService(
       nextCursor: organizations.nextCursor,
       total: total.count,
     },
+  };
+}
+async function getUserOrganizationByIDService(
+  db: DbType,
+  id: OrganizationEntity["id"],
+  userID: UserEntity["id"],
+  extend?: GetOrganizationExtendType,
+): ServiceReturnType<OrganizationEntity> {
+  const organization = await organizationRepository.getOrganizationByUserID(
+    db,
+    id,
+    userID,
+    extend,
+  );
+  if (!organization)
+    return {
+      error: "Not Found",
+      message: "No Organization Found with this ID",
+      status: 404,
+    };
+
+  return {
+    data: organization,
   };
 }
 async function getUserOrganizationsAsOptionsService(
@@ -142,6 +169,7 @@ async function deleteOrganizationService(
 
 export default {
   getUserOrganizations: getUserOrganizationsService,
+  getUserOrganizationByID: getUserOrganizationByIDService,
   getUserOrganizationsAsOptions: getUserOrganizationsAsOptionsService,
   addOrganization: addOrganizationService,
   editOrganization: editOrganizationService,

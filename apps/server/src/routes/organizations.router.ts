@@ -14,6 +14,7 @@ organizationsRoutes.get(
   "/as-options",
   organizationController.getOrganizationsAsOptions,
 );
+organizationsRoutes.get("/:id", organizationController.getOrganization);
 
 organizationsRoutes.patch("/:id", organizationController.editOrganization);
 organizationsRoutes.delete("/:id", organizationController.deleteOrganization);
