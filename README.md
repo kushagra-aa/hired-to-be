@@ -1,69 +1,81 @@
-# React + TypeScript + Vite
+# 🚀 HiredToBe
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> _“Because you’re not just applying. You’re **HiredToBe**.”_
 
-Currently, two official plugins are available:
+## Full Description
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Job hunting is exhausting. You apply to dozens of roles, only to get ghosted. You finally get an interview, but the rounds keep multiplying. You wait weeks for an offer, only to hear _“our manager is out, we’ll get back to you”_. The process is messy, demotivating, and hard to track.
 
-## Expanding the ESLint configuration
+**HiredToBe** is here to make that journey a little easier (and fun).
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+It’s your personal **career companion app** — helping you:
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- **Track applications**: Keep all your job details, recruiter contacts, and documents in one place.
+- **Stay on top of interviews**: Schedule rounds, sync with Google Calendar, and jot down notes + feedback.
+- **Visualize progress**: Use a Kanban board to see where each application stands.
+- **Compare offers**: Put offers side by side and see which one really works for you.
+- **Stay motivated**: Turn the chaotic job hunt into a structured, gamified journey.
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+Instead of drowning in emails, spreadsheets, and sticky notes, **HiredToBe** gives you clarity and control. It’s not just about tracking jobs — it’s about keeping your head up through the rejections, the ghosting, and the endless waiting, so you can focus on what matters: landing the role you’re meant to be.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+The first public milestone release of **HiredToBe**, a job-hunt tracker that helps you stay organized, motivated, and one step closer to your next offer.  
+This MVP focuses on delivering the **core authentication** and **job/organization management features** essential to the experience.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Features
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### Authentication
+
+- **Google OAuth login** via Supabase
+- **Short-lived cookie sessions (~1h)** for secure access
+- **Logout** flow implemented for clean session handling
+
+### Job Management
+
+- **CRUD operations** for Jobs  
+  Create, edit, and delete job entries with essential details.
+- **Update Job Status** to track progress (Applied → Interview → Offer → Hired)
+- **Attach Documents (links only)** to jobs
+- **Connect Jobs to Organizations**
+
+### Organization Management
+
+- **CRUD for Organizations**
+- **Attach Organizations** to jobs
+- Organization details page showing associated **jobs** and **connections**
+
+### Details Pages
+
+- **Job Details Page**
+  - Displays **interviews**, **notes**, **docs**, and **connections**
+- **Organization Details Page**
+  - Shows related **jobs** and **connections**
+
+## Improvements & Under the Hood
+
+- Added **query invalidation logic** to keep data in sync after mutations
+- Modularized components for cleaner code and easier scaling
+- Improved **data models** for jobs, organizations, and docs
+- Consistent **UI layout and structure** for better UX
+
+## 🛠️ Tech Stack
+
+- **Next.js 14 + Supabase**
+- **TanStack Query**
+- **TailwindCSS + ShadCN UI**
+- **Google OAuth 2.0**
+- Hosted on **Vercel (serverless)**
+
+## Coming Next (v1 Roadmap)
+
+- 🗂️ **Kanban view** for job stages
+- 🗓️ **Interview scheduling & calendar integration**
+- ⚖️ **Offer comparison** module
+- 🧭 **Dashboard** with analytics and insights
+- 🔄 **Persistent sessions / refresh tokens**
+
+## ❤️ A Note from the Dev
+
+This version marks the foundation of **HiredToBe** — the start of something that makes job hunting feel _less chaotic_ and a bit more _in control_.  
+Stay tuned — v1 will bring visualization, structure, and motivation to your job journey!

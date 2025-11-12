@@ -68,5 +68,5 @@
     "preview": "pnpm build && wrangler dev --env production"
   },
   "type": "module",
-  "version": "1.0.0"
+  "version": "0.5.0"
 }
