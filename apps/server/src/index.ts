@@ -1,7 +1,5 @@
 import { Context, Hono } from "hono";
 
-import { getDb } from "./database/index";
-import { userModel } from "./database/models/user.model";
 import { getStaticAsset } from "./lib/static";
 import { corsMiddleware } from "./middlewares/cors.middleware";
 import { loggerMiddleware } from "./middlewares/logger.middleware";
@@ -15,14 +13,6 @@ const app = new Hono({
 // Global middlewares
 app.use("*", loggerMiddleware);
 app.use("*", corsMiddleware);
-
-// ! REMOVE ONLY FOR DEV
-app.get("/ping", async (c: Context) => {
-  const db = getDb(c.env);
-  const result = await db.select().from(userModel);
-  return c.json(result);
-});
-// ! REMOVE ONLY Untill Home page is not made
 
 // Routes
 routes(app);

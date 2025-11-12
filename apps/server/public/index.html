@@ -2,14 +2,154 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HiredToBe — Your job hunt, organized</title>
+    <meta name="description"
+        content="Track applications, manage recruiters, and stay motivated on your journey to your next offer." />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Code:ital,wght@0,300..800;1,300..800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: oklch(0.5572 0.2617 304.98);
+            --secondary: oklch(1734 0.1925 322.67);
+            --accent: oklch(0.47 0.0937 298.63);
+            --background: oklch(20% 0.01 260deg);
+            --foreground: oklch(97% 0 0deg);
+            --radius: 0.25rem;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--foreground);
+            font-family: "Google Sans Code", "Inter", sans-serif !important;
+        }
+
+        .gradient-text {
+            background: linear-gradient(to right,
+                    var(--primary),
+                    var(--secondary));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--foreground);
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius);
+            transition: all 0.2s ease-in-out;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary);
+            color: var(--background);
+            transform: translateY(-2px);
+        }
+
+        .feature-icon {
+            background-color: var(--accent);
+            color: var(--foreground);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 0.75rem;
+        }
+
+        .feature-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 0.75rem;
+            border: 1px solid var(--accent);
+            padding: 1.5rem 1rem;
+            border-radius: var(--radius);
+        }
+
+        .container {
+            max-width: 80rem;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+    </style>
 </head>
 
-<body>
-    <h1>Hello</h1>
-    <a href="/app/login">Lgoin NoW!</a>
+<body class="min-h-screen flex flex-col items-center justify-center">
+    <!-- Hero Section -->
+    <section class="text-center mt-16 mb-20">
+        <h1 class="text-5xl md:text-6xl font-bold gradient-text">HiredToBe</h1>
+        <p class="text-lg text-gray-300 mt-4">Your job hunt, organized.</p>
+        <p class="text-gray-400 mt-2 max-w-xl mx-auto">
+            Track applications, manage recruiters, and stay motivated on your journey to your next offer.
+        </p>
+        <a href="/app/login" class="btn-primary inline-block mt-8 shadow-lg">
+            Login to Get Started
+        </a>
+    </section>
+
+    <!-- Features -->
+    <section class="container text-center mb-20">
+        <h2 class="text-2xl font-semibold mb-10">What You Can Do Today</h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+            <div class="feature-container">
+                <div class="feature-icon">🔐</div>
+                <h3 class="font-semibold mb-2">Google Login</h3>
+                <p class="text-sm text-gray-400">
+                    Sign in securely with your Google account — no passwords, no hassle.
+                </p>
+            </div>
+            <div class="feature-container">
+                <div class="feature-icon">💼</div>
+                <h3 class="font-semibold mb-2">Track Applications</h3>
+                <p class="text-sm text-gray-400">
+                    Add jobs, update their status, and attach docs & recruiter details.
+                </p>
+            </div>
+            <div class="feature-container">
+                <div class="feature-icon">🏢</div>
+                <h3 class="font-semibold mb-2">Manage Companies</h3>
+                <p class="text-sm text-gray-400">
+                    Keep all job-related organizations, contacts, and notes in one place.
+                </p>
+            </div>
+            <div class="feature-container">
+                <div class="feature-icon">📄</div>
+                <h3 class="font-semibold mb-2">Details Pages</h3>
+                <p class="text-sm text-gray-400">
+                    View each job's timeline, documents, and interviews in one glance.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Roadmap -->
+    <section class="container text-center mb-20">
+        <h2 class="text-2xl font-semibold mb-6">
+            Coming in v1 — The Journey Continues
+        </h2>
+        <ul class="text-gray-400 space-y-2 max-w-md mx-auto text-left">
+            <li>🗂️ <strong>Kanban View</strong> — visualize your job pipeline.</li>
+            <li>🗓️ <strong>Interview Scheduling</strong> — sync rounds to Google Calendar.</li>
+            <li>⚖️ <strong>Offer Comparison</strong> — see which offer truly wins.</li>
+            <li>🧭 <strong>Dashboard & Insights</strong> — track progress and success rate.</li>
+            <li>🔄 <strong>Persistent Sessions</strong> — stay logged in seamlessly.</li>
+        </ul>
+    </section>
+
+    <!-- Footer -->
+    <footer class="text-center text-gray-500 text-sm py-8">
+        v0.5.0 — MVP Release | Built with ❤️ by Kushagra Agnihotri
+    </footer>
 </body>
 
 </html>
