@@ -17,7 +17,7 @@ export function AuthLayout() {
       user &&
       ["/login", "/register"].includes(location.pathname)
     ) {
-      naviagate(location.state.from || USER_LANDING_PAGES[user.role]);
+      naviagate(location?.state?.from || USER_LANDING_PAGES[user.role]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, isAuthenticated, location]);
