@@ -17,6 +17,8 @@ dist-ssr
 .next
 build
 
+# Custom Static Build
+**/public/app
 
 # Editor directories and files
 .idea

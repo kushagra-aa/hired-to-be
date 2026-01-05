@@ -35,6 +35,8 @@ export async function registerService(
   return {
     data: toUserDTO(user[0]),
     message: "User Registed Successfully",
+    pagination: undefined,
+    cursorPagination: undefined,
     status: 201,
   };
 }
@@ -96,6 +98,8 @@ async function googleOAuthService(
   return {
     data: { ...toUserDTO(user), token: accessToken },
     message: "User LoggedIn Successfully",
+    pagination: undefined,
+    cursorPagination: undefined,
     status: 200,
   };
 }

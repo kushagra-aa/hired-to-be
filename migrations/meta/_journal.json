@@ -64,6 +64,55 @@
       "when": 1758202367355,
       "tag": "0008_abnormal_speedball",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1758289352297,
+      "tag": "0009_wooden_layla_miller",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1758295705975,
+      "tag": "0010_condemned_rhodey",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "6",
+      "when": 1758460268617,
+      "tag": "0011_secret_solo",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "6",
+      "when": 1758803792287,
+      "tag": "0012_next_boomerang",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "6",
+      "when": 1758810060125,
+      "tag": "0013_shallow_nightmare",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "6",
+      "when": 1758980247472,
+      "tag": "0014_new_night_nurse",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "6",
+      "when": 1762853225574,
+      "tag": "0015_brave_the_liberteens",
+      "breakpoints": true
     }
   ]
 }

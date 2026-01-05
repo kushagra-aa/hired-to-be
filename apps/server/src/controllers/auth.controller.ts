@@ -32,24 +32,30 @@ async function googleLoginController(c: Context) {
 
 async function googleCallbackController(c: Context) {
   const env = getEnv(c);
+  const redirect = (data: Record<string, unknown>) =>
+    c.redirect(
+      buildUrl(
+        `${env.CLIENT_BASE_URI}`,
+        `${env.CLIENT_REDIRECT_ENDPOINT}`,
+        data,
+      ),
+    );
+
   try {
     const db = getDb(c.env);
     const authCode = c.req.query("code");
     const errorCode = c.req.query("error");
     if (!authCode)
-      return c.redirect(
-        buildUrl(`${env.CLIENT_BASE_URI}`, "", {
-          error_code: errorCode,
-          message:
-            errorCode && errorCode === "access_denied"
-              ? "You need to select an account and allow to Login"
-              : "Something Went Wrong!",
-          success: false,
-        }),
-      );
+      return redirect({
+        error_code: errorCode,
+        message:
+          errorCode && errorCode === "access_denied"
+            ? "You need to select an account and allow to Login"
+            : "Something Went Wrong!",
+        success: false,
+      });
     const userResp = await authService.googleOAuth(env, db, authCode);
-    if (userResp.error || !userResp.data)
-      return c.redirect(buildUrl(`${env.CLIENT_BASE_URI}`, "", userResp));
+    if (userResp.error || !userResp.data) return redirect(userResp);
 
     const token = await sessionService.createSession(
       c,
@@ -59,16 +65,14 @@ async function googleCallbackController(c: Context) {
 
     await setSessionCookie(c, token);
 
-    return c.redirect(
-      buildUrl(`${env.CLIENT_BASE_URI}`, "", { success: true }),
-    );
+    return redirect({
+      success: true,
+    });
   } catch {
-    return c.redirect(
-      buildUrl(`${env.CLIENT_BASE_URI}`, "", {
-        message: "Something Went Wrong!",
-        success: false,
-      }),
-    );
+    return redirect({
+      message: "Something Went Wrong!",
+      success: false,
+    });
   }
 }
 

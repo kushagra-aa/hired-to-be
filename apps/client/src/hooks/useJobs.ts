@@ -1,0 +1,155 @@
+import {
+  JobAddPayloadType,
+  JobEditPayloadType,
+  JobEntity,
+  JobFullEntity,
+} from "@hiredtobe/shared/entities";
+import { SuccessResponseType } from "@hiredtobe/shared/types";
+
+import {
+  addJobAPI,
+  deleteJobAPI,
+  editJobAPI,
+  editJobStatusAPI,
+  getJobByIDAPI,
+  getJobsAPI,
+} from "@/client/lib/api/jobs.api";
+import { appQueryClient } from "@/client/lib/query-client";
+import { useAuth } from "@/client/stores/auth.store";
+
+import {
+  useAppInfiniteQuery,
+  useAppMutation,
+  useAppQuery,
+} from "./useAppQuery";
+
+// Query Keys
+export const JOB_KEY = (userId?: number, ...args: string[]) => [
+  "jobs",
+  userId,
+  ...args,
+];
+
+// Fetch Jobs
+export function useJobs() {
+  const { user } = useAuth();
+  return useAppInfiniteQuery<
+    SuccessResponseType<JobFullEntity[]>,
+    ReturnType<typeof JOB_KEY>
+  >({
+    queryKey: JOB_KEY(user?.id),
+    queryFn: ({ pageParam }) => getJobsAPI(pageParam, ["organization"]),
+    initialPageParam: null,
+    getNextPageParam: (lastPage) => {
+      // Return nextCursor if hasMore is true, otherwise undefined
+      return lastPage?.cursorPagination?.hasMore
+        ? lastPage?.cursorPagination.nextCursor
+        : undefined;
+    },
+    enabled: !!user?.id,
+  });
+}
+
+// Fetch Job By ID
+export function useJobByID({ id, extend }: { id: string; extend?: string[] }) {
+  const { user } = useAuth();
+  return useAppQuery<JobFullEntity, ReturnType<typeof JOB_KEY>>({
+    queryKey: JOB_KEY(user?.id, String(id)),
+    queryFn: () => getJobByIDAPI(id, extend ?? ["organization"]),
+    enabled: !!user?.id,
+  });
+}
+
+// Add Job
+export function useAddJob() {
+  const { user } = useAuth();
+
+  return useAppMutation<
+    JobEntity, // success type
+    Omit<JobAddPayloadType, "status"> // variables type (title)
+  >({
+    mutationFn: async (data: Omit<JobAddPayloadType, "status">) => {
+      return addJobAPI(
+        { ...data },
+        // token  // Can take Token from store for Bearer Style Auth
+      );
+    },
+    onSuccess: () => {
+      void appQueryClient.invalidateQueries({
+        queryKey: JOB_KEY(user?.id),
+      });
+    },
+  });
+}
+
+// Update Job
+export function useUpdateJob() {
+  const { user } = useAuth();
+
+  return useAppMutation<
+    JobEntity, // success type
+    { id: number; data: JobEditPayloadType } // variables type (title)
+  >({
+    mutationFn: async ({
+      id,
+      data,
+    }: {
+      id: number;
+      data: JobEditPayloadType;
+    }) => {
+      if (!user) throw new Error("User not authenticated");
+      return editJobAPI(id, { ...data });
+    },
+    onSuccess: () => {
+      void appQueryClient.invalidateQueries({
+        queryKey: JOB_KEY(user?.id),
+      });
+    },
+  });
+}
+
+// Update JobStatus
+export function useUpdateJobStatus() {
+  const { user } = useAuth();
+
+  return useAppMutation<
+    JobEntity, // success type
+    { id: number; status: JobEntity["status"] } // variables type (title)
+  >({
+    mutationFn: async ({
+      id,
+      status,
+    }: {
+      id: number;
+      status: JobEntity["status"];
+    }) => {
+      if (!user) throw new Error("User not authenticated");
+      return editJobStatusAPI(id, { status });
+    },
+    onSuccess: () => {
+      void appQueryClient.invalidateQueries({
+        queryKey: JOB_KEY(user?.id),
+      });
+    },
+  });
+}
+
+// Delete Job
+export function useDeleteJob() {
+  const { user } = useAuth();
+
+  return useAppMutation<
+    { id: number }, // success type
+    number // variables type (title)
+  >({
+    mutationFn: async (id: number) => {
+      if (!user) throw new Error("User not authenticated");
+      return deleteJobAPI(id); // pass user_id for ownership check
+    },
+    onSuccess: () => {
+      void appQueryClient.invalidateQueries({
+        queryKey: JOB_KEY(user?.id),
+      });
+    },
+  });
+}

@@ -1,0 +1,1 @@
+ALTER TABLE `organizations` ADD `user_id` integer NOT NULL REFERENCES users(id);

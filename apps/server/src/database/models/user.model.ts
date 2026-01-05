@@ -8,6 +8,8 @@ import {
 } from "drizzle-orm/sqlite-core";
 
 import { baseFields } from "./base.model";
+import { jobModel } from "./job.model";
+import { organizationModel } from "./organization.model";
 
 export const userModel = sqliteTable(
   "users",
@@ -30,10 +32,11 @@ export const userModel = sqliteTable(
 );
 export type UserModelType = InferSelectModel<typeof userModel>;
 
-// User → Sessions (1:N)
 export const userRelations = relations(userModel, ({ many }) => ({
   sessions: many(sessionModel),
   credentials: many(userCredentialModel),
+  organizations: many(organizationModel),
+  jobs: many(jobModel),
 }));
 
 export const userCredentialModel = sqliteTable(
@@ -51,9 +54,7 @@ export const userCredentialModel = sqliteTable(
 
     ...baseFields, // Does not Include `id`
   },
-  (t) => ({
-    userProviderIdx: uniqueIndex("user_provider_idx").on(t.userID, t.provider),
-  }),
+  (t) => [uniqueIndex("user_provider_idx").on(t.userID, t.provider)],
 );
 
 // UserCredential → User (N:1)

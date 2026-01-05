@@ -8,7 +8,6 @@ import {
 
 import { PageError } from "@/client/components/feedback/PageError";
 import { PageLoader } from "@/client/components/feedback/PageLoader";
-import { AdminLayout } from "@/client/layouts/AdminLayout";
 import { AuthLayout } from "@/client/layouts/AuthLayout";
 import { MainLayout } from "@/client/layouts/MainLayout";
 
@@ -16,11 +15,13 @@ import { ProtectedRoute } from "./ProtectedRoute";
 
 // Lazy load pages
 const LoginPage = lazy(() => import("@/client/pages/auth/LoginPage"));
-const RegisterPage = lazy(() => import("@/client/pages/auth/RegisterPage"));
-const HomePage = lazy(() => import("@/client/pages/HomePage"));
-const TodosPage = lazy(() => import("@/client/pages/protected/TodosPage"));
-const AdminDashboardPage = lazy(
-  () => import("@/client/pages/protected/admin/AdminDashboardPage"),
+const JobsPage = lazy(() => import("@/client/pages/protected/JobsPage"));
+const JobPage = lazy(() => import("@/client/pages/protected/JobPage"));
+const OrganizationsPage = lazy(
+  () => import("@/client/pages/protected/OrganizationsPage"),
+);
+const OrganizationPage = lazy(
+  () => import("@/client/pages/protected/OrganizationPage"),
 );
 const NotFoundPage = lazy(() => import("@/client/pages/NotFoundPage"));
 
@@ -30,39 +31,44 @@ const routes: RouteObject[] = [
     errorElement: <PageError />,
     children: [
       {
-        path: "/",
-        element: (
-          <Suspense fallback={<PageLoader />}>
-            <HomePage />
-          </Suspense>
-        ),
-        errorElement: <PageError />,
-      },
-      {
-        path: "/todos",
+        path: "/jobs",
         element: (
           <ProtectedRoute roles={[UserRoleEnum.user]}>
             <Suspense fallback={<PageLoader />}>
-              <TodosPage />
+              <JobsPage />
             </Suspense>
           </ProtectedRoute>
         ),
       },
       {
-        element: <AdminLayout />,
-        errorElement: <PageError />,
-        children: [
-          {
-            path: "/admin",
-            element: (
-              <ProtectedRoute roles={[UserRoleEnum.admin]}>
-                <Suspense fallback={<PageLoader />}>
-                  <AdminDashboardPage />
-                </Suspense>
-              </ProtectedRoute>
-            ),
-          },
-        ],
+        path: "/jobs/:id",
+        element: (
+          <ProtectedRoute roles={[UserRoleEnum.user]}>
+            <Suspense fallback={<PageLoader />}>
+              <JobPage />
+            </Suspense>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/organizations",
+        element: (
+          <ProtectedRoute roles={[UserRoleEnum.user]}>
+            <Suspense fallback={<PageLoader />}>
+              <OrganizationsPage />
+            </Suspense>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/organizations/:id",
+        element: (
+          <ProtectedRoute roles={[UserRoleEnum.user]}>
+            <Suspense fallback={<PageLoader />}>
+              <OrganizationPage />
+            </Suspense>
+          </ProtectedRoute>
+        ),
       },
     ],
   },
@@ -79,15 +85,6 @@ const routes: RouteObject[] = [
         ),
         errorElement: <PageError />,
       },
-      {
-        path: "/register",
-        element: (
-          <Suspense fallback={<PageLoader />}>
-            <RegisterPage />
-          </Suspense>
-        ),
-        errorElement: <PageError />,
-      },
     ],
   },
   {
@@ -100,12 +97,12 @@ const routes: RouteObject[] = [
   },
 ];
 
-export const router = createBrowserRouter(routes);
+export const router = createBrowserRouter(routes, { basename: "/app" });
 
 // Can Configure User's Landing pages based on Roles
 export const USER_LANDING_PAGES: Record<UserRoleEnum, string> = {
   ADMIN: "/admin",
-  USER: "/todos",
+  USER: "/jobs",
 };
 
 export default function AppRouter() {

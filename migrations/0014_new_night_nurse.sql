@@ -1,0 +1,1 @@
+ALTER TABLE `job_documents` ADD `user_id` integer NOT NULL REFERENCES users(id);

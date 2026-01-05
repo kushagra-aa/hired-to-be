@@ -8,6 +8,7 @@ import { Button, VariantsType } from "@/client/shadcn/components/ui/button";
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: VariantsType["variant"];
   size?: VariantsType["size"];
+  asChild?: boolean;
 };
 
 function UIButton({

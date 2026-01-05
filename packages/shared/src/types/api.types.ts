@@ -6,19 +6,68 @@ export type BaseResponseType = {
   success?: boolean;
 };
 
+export type PaginationResponseType = {
+  count: number;
+  page: number;
+  pageSize: number;
+  total?: number;
+};
+
+export type CursorPaginationResponseType = {
+  nextCursor?: number;
+  pageSize: number;
+  count: number;
+  hasMore: boolean;
+  total?: number;
+};
+
 export type ErrorResponseType = {
   errors?: Record<string, string[]>;
   error: string;
   data?: undefined;
 } & BaseResponseType;
 
-export type SuccessResponseType<T = unknown> = {
-  data: T;
-  count?: number;
-  page?: number;
-  pageSize?: number;
-  error?: undefined;
-} & BaseResponseType;
+export type SuccessResponseType<T = unknown> =
+  | (BaseResponseType & {
+      data: T;
+      pagination: PaginationResponseType;
+      cursorPagination: undefined;
+      error?: undefined;
+    })
+  | (BaseResponseType & {
+      data: T;
+      pagination: undefined;
+      cursorPagination: CursorPaginationResponseType;
+      error?: undefined;
+    })
+  | (BaseResponseType & {
+      data: T;
+      cursorPagination: undefined;
+      pagination: undefined;
+      error?: undefined; // still allow no pagination
+    });
+
+export type ServiceReturnType<T = unknown> = Promise<
+  | {
+      data: T;
+      pagination: PaginationResponseType;
+      cursorPagination?: undefined;
+      error?: undefined;
+    }
+  | {
+      data: T;
+      cursorPagination: CursorPaginationResponseType;
+      pagination?: undefined;
+      error?: undefined;
+    }
+  | {
+      data: T;
+      cursorPagination?: undefined;
+      pagination?: undefined;
+      error?: undefined; // still allow no pagination
+    }
+  | ErrorResponseType
+>;
 
 export type RegistryReturnType<T = unknown> = Promise<
   ErrorResponseType | SuccessResponseType<T>

@@ -16,8 +16,9 @@ export type ConfigType = tseslint.ConfigArray[number];
 const config: ConfigType[] = [
   {
     ignores: [
-      "**/dist",
-      "**/node_modules",
+      "**/public/app/*",
+      "**/dist/*",
+      "**/node_modules/*",
       "postcss.config.js",
       "tailwind.config.ts",
       "vite.config.ts",

@@ -12,7 +12,7 @@ export function useSession() {
     refetchInterval: (data) => {
       // Only poll if user is logged in
       if (data?.state?.data) return 1000 * 60 * 1; // every 10 minutes
-      return false; // don’t poll if not logged in
+      return 0; // don’t poll if not logged in
     },
     refetchOnWindowFocus: true, // re-check when tab is focused
     refetchOnReconnect: true, // re-check when network reconnects

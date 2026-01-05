@@ -39,5 +39,11 @@
     "**/Thumbs.db": true
   },
   "stylelint.validate": ["css", "scss", "postcss"],
-  "typescript.tsdk": "node_modules\\typescript\\lib"
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "workbench.editor.customLabels.patterns": {
+    "**/pages/**/index.{tsx,ts}": "${dirname}",
+    "**/components/**/index.{tsx,ts}": "${dirname}Component",
+    "**/pages/**/index*.{css,scss}": "${dirname}Styles",
+    "**/components/**/index*.{css,scss}": "${dirname}Styles"
+  }
 }

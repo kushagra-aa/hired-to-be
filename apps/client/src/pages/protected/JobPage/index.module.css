@@ -1,0 +1,33 @@
+/* stylelint-disable media-feature-range-notation */
+.job_grid{
+    --color: var(--color-accent);
+    --rounded: 0;
+
+    background-color: var(--color);
+    border: 1px solid var(--color);
+    border-radius: var(--rounded);
+    display: grid;
+    gap: 4px 2px;
+    grid-template-columns: 1fr 0.5fr;
+    grid-template-rows: repeat(4, 1fr) ;
+    margin-top: 2rem;
+    min-height: 75vh;
+    overflow: hidden;
+
+    &>:is(div,aside){
+        background-color: var(--color-background);
+        border-radius: var(--rounded);
+        padding: 1rem;
+    }
+
+}
+
+@media screen and (max-width: 640px) {
+    .job_grid{
+        grid-template-columns: 1fr;
+
+        &>.docs_container{
+            grid-row: 5;
+        }
+    }
+}
